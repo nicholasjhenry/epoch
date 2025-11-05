@@ -21,7 +21,8 @@ defmodule FireStarter.Umbrella.MixProject do
       preferred_envs: [
         # Set :dialyzer to run in the same env as :precommit
         dialyzer: :test,
-        precommit: :test
+        precommit: :test,
+        "test.watch": :test
       ]
     ]
   end
@@ -42,7 +43,8 @@ defmodule FireStarter.Umbrella.MixProject do
     [
       # Required to run "mix format" on ~H/.heex files from the umbrella root
       {:phoenix_live_view, ">= 0.0.0"},
-      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false}
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
+      {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false}
     ]
   end
 
