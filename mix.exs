@@ -13,6 +13,11 @@ defmodule FireStarter.Umbrella.MixProject do
         plt_file: {:no_warn, "plts/fire_starter.plt"},
         plt_add_apps: [:ex_unit, :mix]
       ],
+      releases: [
+        fire_starter_web: [
+          applications: [fire_starter: :permanent, fire_starter_web: :permanent]
+        ]
+      ],
 
       # Docs
       name: "FireStarter",

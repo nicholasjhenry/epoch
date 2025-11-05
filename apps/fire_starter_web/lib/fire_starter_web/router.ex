@@ -18,6 +18,7 @@ defmodule FireStarterWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    get "/health", HealthCheck, :health
   end
 
   # Other scopes may use custom stacks.

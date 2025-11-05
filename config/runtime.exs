@@ -7,18 +7,29 @@ import Config
 # any compile-time configuration in here, as it won't be applied.
 # The block below contains prod specific runtime configuration.
 if config_env() == :prod do
-  database_url =
-    System.get_env("DATABASE_URL") ||
-      raise """
-      environment variable DATABASE_URL is missing.
-      For example: ecto://USER:PASS@HOST/DATABASE
-      """
+  if System.get_env("RELEASE_COMMAND") == "eval" do
+    # Database configuration for RELEASE commands (migrations, seeds, etc.):
+    # Migrations use prepared statements which is not compatible with PgBouncer's
+    # transaction pooling mode. When release commands are executed (see fly.toml),
+    # we use a direct database connection that bypasses PgBouncer entirely.
+    # The :named prepare mode is required for migrations to work properly.
+    config :fire_starter, FireStarter.Repo,
+      url: System.fetch_env!("DATABASE_RELEASE_URL"),
+      prepare: :named
+  else
+    # Database configuration for NORMAL application runtime:
+    # When the application is running, we use PgBouncer for connection pooling
+    # to improve performance and resource usage. PgBouncer requires :unnamed
+    # prepared statements to work correctly with its pooling mechanism.
+    config :fire_starter, FireStarter.Repo,
+      url: System.fetch_env!("DATABASE_URL"),
+      prepare: :unnamed
+  end
 
   maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
 
   config :fire_starter, FireStarter.Repo,
     # ssl: true,
-    url: database_url,
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
     # For machines with several cores, consider starting multiple pools of `pool_size`
     # pool_count: 4,
@@ -37,6 +48,9 @@ if config_env() == :prod do
       """
 
   config :fire_starter_web, FireStarterWeb.Endpoint,
+    url: [
+      host: System.fetch_env!("PHX_HOST")
+    ],
     http: [
       # Enable IPv6 and bind on all interfaces.
       # Set it to  {0, 0, 0, 0, 0, 0, 0, 1} for local network only access.
@@ -50,7 +64,7 @@ if config_env() == :prod do
   # If you are doing OTP releases, you need to instruct Phoenix
   # to start each relevant endpoint:
   #
-  #     config :fire_starter_web, FireStarterWeb.Endpoint, server: true
+  config :fire_starter_web, FireStarterWeb.Endpoint, server: true
   #
   # Then you can assemble a release by calling `mix release`.
   # See `mix help release` for more information.

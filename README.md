@@ -26,7 +26,8 @@ What do you get?
 
 ### CI and Deployment
 
-- CI GitHub action
+- [GitHub CI Action](.github/workflows/ci.yml)
+- [Fly.io Configuration](apps/fire_starter_web/fly.toml)
 
 ---
 
@@ -39,6 +40,7 @@ What do you get?
 Prerequistes:
 
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- [FlyCTL](https://fly.io/docs/flyctl/install/)
 - [Mise-en-place](https://mise.jdx.dev/)
 
 Execute the following:
@@ -54,4 +56,23 @@ script/setup
 ```sh
 mix docs
 mix docs.open
+```
+
+## Deployment
+
+Local verification:
+
+```sh
+script/release/build
+script/release/server
+```
+
+Provisioning Fly.io: COMING SOON
+
+
+Deploy to [Fly.io](https://fly.io/):
+
+```sh
+fly auth login # if not authenticated
+fly deploy --config apps/fire_starter_web
 ```

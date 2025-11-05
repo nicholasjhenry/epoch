@@ -1,0 +1,46 @@
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'fire-starter-staging-web'
+primary_region = 'iad'
+kill_signal = "SIGTERM"
+kill_timeout = 5
+
+[deploy]
+strategy = "bluegreen"
+release_command = "bash -c '/app/bin/release_command'"
+
+[build]
+dockerfile = 'Dockerfile'
+ignorefile = '.dockerignore'
+
+[env]
+# NOTE: Some non-sensitive environment variables are stored as Secrets.,
+# e.g. DATABASE_SSL
+PHX_HOST = 'fire-starter-staging-web.fly.dev'
+PORT = '8080'
+
+[http_service]
+internal_port = 8080
+force_https = true
+auto_stop_machines = "off"
+auto_start_machines = false
+min_machines_running = 2
+processes = ['app']
+
+[[http_service.checks]]
+grace_period = "5s"
+interval = "10s"
+method = "GET"
+path = "/health"
+timeout = "5s"
+
+[http_service.concurrency]
+type = 'connections'
+hard_limit = 1000
+soft_limit = 1000
+
+[[vm]]
+memory = 512
+cpu_kind = 'shared'
+cpus = 1
