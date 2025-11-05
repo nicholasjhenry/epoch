@@ -23,6 +23,10 @@ What do you get?
 
 - Macros; see [FireStarter Module](apps/fire_starter/lib/fire_starter.ex)
 
+### CI and Deployment
+
+- CI GitHub action
+
 ---
 
 | Application                                   | Description                |
