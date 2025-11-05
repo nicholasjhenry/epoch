@@ -47,6 +47,7 @@ defmodule FireStarter.MixProject do
       {:jason, "~> 1.2"},
       {:swoosh, "~> 1.16"},
       {:req, "~> 0.5"},
+      {:ecto_erd, "~> 0.6.4", only: [:dev]},
       {:ex_doc, "~> 0.38.1", only: [:dev]}
     ]
   end
@@ -55,11 +56,21 @@ defmodule FireStarter.MixProject do
   #
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
+    # process in the root of the umbrella (../../)
+    assets_path = "../../doc/fire_starter/assets"
+
     [
       setup: ["deps.get", "ecto.setup"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run #{__DIR__}/priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"]
+      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
+      docs: ["docs", "docs.gen.erd"],
+      "docs.gen.erd": [
+        "cmd mkdir -p doc/assets",
+        # NOTE: See `./.ecto_erd.exs for configuration`
+        "ecto.gen.erd --config-path ../../.ecto_erd.exs --output-path #{assets_path}/ecto_erd.dot",
+        "cmd dot -Tpng #{assets_path}/ecto_erd.dot -o #{assets_path}/erd.png"
+      ]
     ]
   end
 

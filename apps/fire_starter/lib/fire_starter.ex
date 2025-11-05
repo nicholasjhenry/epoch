@@ -7,6 +7,10 @@ defmodule FireStarter do
   For information on each sub-domain, see:
 
   <!--- LIST SUBDOMAINS HERE. -->
+
+  ## Ecto ERD
+
+  ![Ecto ERD](./assets/erd.png) [View Larger Image](./assets/erd.png)
   """
 
   defmodule Identifier do
