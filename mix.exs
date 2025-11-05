@@ -77,7 +77,11 @@ defmodule FireStarter.Umbrella.MixProject do
         "test"
       ],
       docs: ["docs --formatter html", "cmd mix docs --formatter html"],
-      "docs.open": &open_docs/1
+      "docs.open": &open_docs/1,
+      "usage_rules.update": [
+        # --all - Gather usage rules from all dependencies that have them (includes both main rules and all sub-rules)
+        "usage_rules.sync ./AGENTS.md --all --inline usage_rules:all --link-to-folder deps"
+      ]
     ]
   end
 

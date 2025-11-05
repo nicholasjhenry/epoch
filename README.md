@@ -18,6 +18,7 @@ What do you get?
 - [Conductor](https://conductor.build/)
 - `CLAUDE.md`
 - [Tidewave](https://tidewave.ai/)
+- [UsageRules](https://hexdocs.pm/usage_rules)
 
 ### Style Guide
 

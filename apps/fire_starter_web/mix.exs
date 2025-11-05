@@ -60,7 +60,8 @@ defmodule FireStarterWeb.MixProject do
       {:fire_starter, in_umbrella: true},
       {:jason, "~> 1.2"},
       {:bandit, "~> 1.5"},
-      {:tidewave, "~> 0.5", only: [:dev]}
+      {:tidewave, "~> 0.5", only: [:dev]},
+      {:usage_rules, "~> 0.1", only: [:dev]}
     ]
   end
 
