@@ -1,11 +1,10 @@
-# FireStarter
+# 🔥 FireStarter
 
 ---
-A starter application for a Phoenix Umbella project.
 
-What do you get?
+A starter application for a Phoenix Umbella project. What do you get?
 
-### Installed and configured packages
+### 📦 Installed and configured packages
 
 - [Credo](https://hexdocs.pm/credo)
 - [Dialzyer](https://hexdocs.pm/dialyxir)
@@ -13,23 +12,28 @@ What do you get?
 - [EctoErd](https://hexdocs.pm/ecto_erd)
 - [Igniter](https://hexdocs.pm/igniter)
 
-### Agentic Coding
+### 🤖 Agentic Coding
 
 - [Conductor](https://conductor.build/)
 - `CLAUDE.md`
 - [Tidewave](https://tidewave.ai/)
 - [UsageRules](https://hexdocs.pm/usage_rules)
 
-### Style Guide
+### ✏️ Style Guide and Documentation
 
 - Macros; see [FireStarter Module](apps/fire_starter/lib/fire_starter.ex)
+- Documentation deployed to [GitHub Pages](https://nicholasjhenry.github.io/fire-starter-umbrella/)
 
-### CI and Deployment
+### 🚀 CI and Deployment
 
 - [GitHub CI Action](.github/workflows/ci.yml)
 - [Fly.io Configuration](apps/fire_starter_web/fly.toml)
 
+🚧 Remove the above documentation when using for your own application.
+
 ---
+
+## Applications
 
 | Application                                   | Description                |
 | --------------------------------------------- | -------------------------- |
