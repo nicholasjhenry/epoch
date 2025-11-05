@@ -13,7 +13,11 @@ defmodule FireStarter.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      # Docs
+      name: "FireStarter",
+      homepage_url: "../index.html",
+      docs: docs()
     ]
   end
 
@@ -42,7 +46,8 @@ defmodule FireStarter.MixProject do
       {:postgrex, ">= 0.0.0"},
       {:jason, "~> 1.2"},
       {:swoosh, "~> 1.16"},
-      {:req, "~> 0.5"}
+      {:req, "~> 0.5"},
+      {:ex_doc, "~> 0.38.1", only: [:dev]}
     ]
   end
 
@@ -55,6 +60,36 @@ defmodule FireStarter.MixProject do
       "ecto.setup": ["ecto.create", "ecto.migrate", "run #{__DIR__}/priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"]
+    ]
+  end
+
+  defp docs do
+    [
+      # NOTE: Module name
+      main: "FireStarter",
+      output: "../../doc/fire_starter",
+      # logo: "path/to/logo.png",
+      extras: [
+        # EXAMPLE:
+        # "notebooks/case_study_1.livemd",
+        # "notebooks/case_study_2.livemd"
+      ],
+      groups_for_extras: [
+        # EXAMPLE:
+        # "Case Studies": Path.wildcard("notebooks/*.livemd")
+      ],
+      assets: %{
+        "guides/assets" => "assets"
+      },
+      api_reference: true,
+      groups_for_modules: [
+        # EXAMPLE:
+        # Accounts: [
+        #   ~r"^FireStarter\.Accounts",
+        #   ~r"^FireStarter\.Accounts\..*"
+        # ],
+      ],
+      nest_modules_by_prefix: []
     ]
   end
 end

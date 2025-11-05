@@ -1,3 +1,0 @@
-# FireStarter
-
-**TODO: Add description**

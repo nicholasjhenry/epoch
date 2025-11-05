@@ -12,7 +12,12 @@ defmodule FireStarter.Umbrella.MixProject do
       dialyzer: [
         plt_file: {:no_warn, "plts/fire_starter.plt"},
         plt_add_apps: [:ex_unit, :mix]
-      ]
+      ],
+
+      # Docs
+      name: "FireStarter",
+      source_url: "https://github.com/nicholasjhenry/fire-starter-umbrella",
+      docs: &docs/0
     ]
   end
 
@@ -68,7 +73,29 @@ defmodule FireStarter.Umbrella.MixProject do
         "deps.unlock --unused",
         "format",
         "test"
-      ]
+      ],
+      docs: ["docs --formatter html", "cmd mix docs --formatter html"],
+      "docs.open": &open_docs/1
     ]
   end
+
+  defp open_docs(_) do
+    System.cmd("open", ["doc/index.html"])
+  end
+
+  defp docs do
+    [
+      # NOTE: Resolves "warning: index.html redirects to README.html, which does not exist".
+      main: "readme",
+      api_reference: false,
+      extras: [
+        "README.md"
+        # EXAMPLE:
+        # "guides/some_file.md"
+      ],
+      ignore_apps: apps()
+    ]
+  end
+
+  defp apps, do: File.ls!("./apps") |> Enum.map(&String.to_atom/1)
 end

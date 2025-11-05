@@ -1,9 +1,11 @@
 defmodule FireStarter do
   @moduledoc """
-  FireStarter keeps the contexts that define your domain
-  and business logic.
+  <!-- ADD PURPOSE STATEMENT HERE -->
 
-  Contexts are also responsible for managing your data, regardless
-  if it comes from the database, an external API or others.
+  ## Sub-Domains
+
+  For information on each sub-domain, see:
+
+  <!--- LIST SUBDOMAINS HERE. -->
   """
 end
