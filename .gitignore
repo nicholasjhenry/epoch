@@ -22,7 +22,10 @@ erl_crash.dump
 # Temporary files, for example, from tests.
 /tmp/
 
-/.expert
-
 /.env
 /.env.local
+
+/.expert
+
+/plts/*.plt
+/plts/*.plt.hash
