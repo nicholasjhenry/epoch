@@ -10,6 +10,7 @@ config :fire_starter, FireStarter.Repo,
   password: "postgres",
   hostname: "localhost",
   database: "fire_starter_test#{System.get_env("MIX_TEST_PARTITION")}",
+  port: String.to_integer(System.get_env("DATABASE_PORT", "5432")),
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: System.schedulers_online() * 2
 

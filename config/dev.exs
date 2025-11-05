@@ -6,6 +6,7 @@ config :fire_starter, FireStarter.Repo,
   password: "postgres",
   hostname: "localhost",
   database: "fire_starter_dev",
+  port: String.to_integer(System.get_env("DATABASE_PORT", "5432")),
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
