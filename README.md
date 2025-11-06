@@ -21,7 +21,7 @@ A starter application template for a Phoenix Umbella project. What do you get?
 
 ### ✏️ Style Guide and Documentation
 
-- Macros; see [FireStarter Module](apps/fire_starter/lib/fire_starter.ex)
+- [Style Guide](guides/style_guide/style_guide.md) ([docs](style_guide.html))
 - Documentation deployed to [GitHub Pages](https://nicholasjhenry.github.io/fire-starter-umbrella/)
 
 ### 🚀 CI and Deployment

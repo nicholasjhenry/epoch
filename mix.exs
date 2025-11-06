@@ -101,10 +101,20 @@ defmodule FireStarter.Umbrella.MixProject do
       api_reference: false,
       extras: [
         "README.md",
+        "guides/style_guide/style_guide.md",
+        "guides/style_guide/code.md",
+        "guides/style_guide/phoenix.md",
+        "guides/style_guide/ecto.md",
+        "guides/style_guide/otp.md",
+        "guides/style_guide/architecture.md",
+        "guides/style_guide/testing.md",
+        "guides/style_guide/documentation.md",
+        "guides/style_guide/resources.md",
         "guides/ops/fly_io.md",
         "guides/ops/conductor.md"
       ],
       groups_for_extras: [
+        "Style Guide": Path.wildcard("guides/style_guide/*.md"),
         Operations: Path.wildcard("guides/ops/*.md")
       ],
       ignore_apps: apps()
