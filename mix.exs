@@ -100,9 +100,11 @@ defmodule FireStarter.Umbrella.MixProject do
       main: "readme",
       api_reference: false,
       extras: [
-        "README.md"
-        # EXAMPLE:
-        # "guides/some_file.md"
+        "README.md",
+        "guides/ops/fly_io.md"
+      ],
+      groups_for_extras: [
+        Operations: Path.wildcard("guides/ops/*.md")
       ],
       ignore_apps: apps()
     ]

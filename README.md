@@ -2,7 +2,7 @@
 
 ---
 
-A starter application for a Phoenix Umbella project. What do you get?
+A starter application template for a Phoenix Umbella project. What do you get?
 
 ### 📦 Installed and configured packages
 
@@ -35,9 +35,9 @@ A starter application for a Phoenix Umbella project. What do you get?
 
 ## Applications
 
-| Application                                   | Description                |
-| --------------------------------------------- | -------------------------- |
-| FireStarter [Docs](./fire_starter/index.html) | Business Application Logic |
+| Application                                                                            | Description                |
+| -------------------------------------------------------------------------------------- | -------------------------- |
+| [FireStarter](apps/fire_starter/lib/fire_starter.ex) ([docs](fire_starter/index.html)) | Business Application Logic |
 
 ## Setup
 
@@ -62,21 +62,15 @@ mix docs
 mix docs.open
 ```
 
+## Provisioning
+
+See guide: [Provisioning Fly.io](guides/ops/fly_io.md) ([docs](fly_io.html))
+
 ## Deployment
-
-Local verification:
-
-```sh
-script/release/build
-script/release/server
-```
-
-Provisioning Fly.io: COMING SOON
-
 
 Deploy to [Fly.io](https://fly.io/):
 
 ```sh
 fly auth login # if not authenticated
-fly deploy --config apps/fire_starter_web
+fly deploy --config apps/fire_starter_web/fly.toml
 ```
