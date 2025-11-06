@@ -101,7 +101,8 @@ defmodule FireStarter.Umbrella.MixProject do
       api_reference: false,
       extras: [
         "README.md",
-        "guides/ops/fly_io.md"
+        "guides/ops/fly_io.md",
+        "guides/ops/conductor.md"
       ],
       groups_for_extras: [
         Operations: Path.wildcard("guides/ops/*.md")
