@@ -13,17 +13,6 @@ defmodule FireStarter do
   ![Ecto ERD](./assets/erd.png) [View Larger Image](./assets/erd.png)
   """
 
-  defmodule Identifier do
-    @moduledoc """
-    Represents a identifier used to uniquely identify records.
-    """
-
-    @typedoc """
-    A unique identifier type, represented as an Ecto UUID.
-    """
-    @type t :: Ecto.UUID.t()
-  end
-
   defmodule Attrs do
     @moduledoc """
     Represents attributes for record creation and updates.
@@ -40,8 +29,6 @@ defmodule FireStarter do
     quote do
       use Ecto.Schema
 
-      alias FireStarter.Identifier
-
       import Ecto.Changeset
       import Ecto.Query, warn: false
     end
@@ -53,7 +40,6 @@ defmodule FireStarter do
       alias Ecto.Changeset
 
       alias FireStarter.Attrs
-      alias FireStarter.Identifier
       alias FireStarter.Repo
 
       # alias FireStarter.Accounts.Scope
