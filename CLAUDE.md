@@ -1,3 +1,24 @@
+# Non-Negotiables
+
+## Review Available Skills
+
+**IMPORTANT**: Before starting any task, review the available project-scoped and user-scoped skills to determine if any are applicable to the task at hand. Skills provide specialized capabilities and domain knowledge that can significantly improve task execution.
+
+To see all available skills, use the `/help` command or review the skills listed in the system. Common skills include:
+
+- **phoenix-liveview**: Phoenix LiveView patterns and best practices
+- **phoenix-contexts**: Phoenix context design and Ecto patterns  
+- **phoenix-html**: Phoenix HEEx template syntax and form building
+- **ecto**: Ecto schema, changeset, and query patterns
+- **elixir-core**: Elixir language fundamentals and idioms
+- **elixir-otp**: OTP architecture patterns for GenServers and Supervisors
+- **elixir-testing**: ExUnit testing patterns
+- **task-based-ui**: Task-based UI design patterns for Phoenix LiveView
+- **event-modeling-wireframes**: Event modeling and wireframe generation
+- **test-heuristics**: Comprehensive testing strategies
+
+Always consult the relevant skill documentation before implementing features, writing tests, designing UIs, or making architectural decisions.
+
 <!-- usage-rules-start -->
 <!-- usage-rules-header -->
 # Usage Rules
