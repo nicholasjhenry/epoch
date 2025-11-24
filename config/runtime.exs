@@ -13,7 +13,7 @@ if config_env() == :prod do
     # transaction pooling mode. When release commands are executed (see fly.toml),
     # we use a direct database connection that bypasses PgBouncer entirely.
     # The :named prepare mode is required for migrations to work properly.
-    config :fire_starter, FireStarter.Repo,
+    config :epoch, Epoch.Repo,
       url: System.fetch_env!("DATABASE_RELEASE_URL"),
       prepare: :named
   else
@@ -21,14 +21,14 @@ if config_env() == :prod do
     # When the application is running, we use PgBouncer for connection pooling
     # to improve performance and resource usage. PgBouncer requires :unnamed
     # prepared statements to work correctly with its pooling mechanism.
-    config :fire_starter, FireStarter.Repo,
+    config :epoch, Epoch.Repo,
       url: System.fetch_env!("DATABASE_URL"),
       prepare: :unnamed
   end
 
   maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
 
-  config :fire_starter, FireStarter.Repo,
+  config :epoch, Epoch.Repo,
     # ssl: true,
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
     # For machines with several cores, consider starting multiple pools of `pool_size`
@@ -47,7 +47,7 @@ if config_env() == :prod do
       You can generate one by calling: mix phx.gen.secret
       """
 
-  config :fire_starter_web, FireStarterWeb.Endpoint,
+  config :epoch_web, EpochWeb.Endpoint,
     url: [
       host: System.fetch_env!("PHX_HOST")
     ],
@@ -64,7 +64,7 @@ if config_env() == :prod do
   # If you are doing OTP releases, you need to instruct Phoenix
   # to start each relevant endpoint:
   #
-  config :fire_starter_web, FireStarterWeb.Endpoint, server: true
+  config :epoch_web, EpochWeb.Endpoint, server: true
   #
   # Then you can assemble a release by calling `mix release`.
   # See `mix help release` for more information.
@@ -74,7 +74,7 @@ if config_env() == :prod do
   # To get SSL working, you will need to add the `https` key
   # to your endpoint configuration:
   #
-  #     config :fire_starter_web, FireStarterWeb.Endpoint,
+  #     config :epoch_web, EpochWeb.Endpoint,
   #       https: [
   #         ...,
   #         port: 443,
@@ -96,7 +96,7 @@ if config_env() == :prod do
   # We also recommend setting `force_ssl` in your config/prod.exs,
   # ensuring no data is ever sent via http, always redirecting to https:
   #
-  #     config :fire_starter_web, FireStarterWeb.Endpoint,
+  #     config :epoch_web, EpochWeb.Endpoint,
   #       force_ssl: [hsts: true]
   #
   # Check `Plug.SSL` for all available options in `force_ssl`.
@@ -106,7 +106,7 @@ if config_env() == :prod do
   # In production you need to configure the mailer to use a different adapter.
   # Here is an example configuration for Mailgun:
   #
-  #     config :fire_starter, FireStarter.Mailer,
+  #     config :epoch, Epoch.Mailer,
   #       adapter: Swoosh.Adapters.Mailgun,
   #       api_key: System.get_env("MAILGUN_API_KEY"),
   #       domain: System.get_env("MAILGUN_DOMAIN")
@@ -119,5 +119,5 @@ if config_env() == :prod do
   #
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
 
-  config :fire_starter, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
+  config :epoch, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 end

@@ -19,6 +19,6 @@ map_node_fn = fn
 end
 
 [
-  otp_app: :fire_starter,
+  otp_app: :epoch,
   map_node: map_node_fn
 ]

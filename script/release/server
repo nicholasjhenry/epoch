@@ -13,10 +13,10 @@ docker container run \
   --interactive \
   --tty \
   --publish 4000:4000 \
-  --name fire-starter-web \
+  --name epoch-web \
   --env PHX_HOST=localhost \
   --env PORT=4000 \
-  --env DATABASE_URL=ecto://postgres:postgres@host.docker.internal/fire_starter_dev \
+  --env DATABASE_URL=ecto://postgres:postgres@host.docker.internal/epoch_dev \
   --env DATABASE_SSL=false \
   --env SECRET_KEY_BASE=XUHaTf95hc21ZGmnZZxestuSffWo2RRgTq+7l7d+1cygugxDsHeb3helkdU/oPnF \
-  fire-starter-web bin/server
+  epoch-web bin/server

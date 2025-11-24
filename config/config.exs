@@ -10,8 +10,8 @@
 import Config
 
 # Configure Mix tasks and generators
-config :fire_starter,
-  ecto_repos: [FireStarter.Repo]
+config :epoch,
+  ecto_repos: [Epoch.Repo]
 
 # Configures the mailer
 #
@@ -20,42 +20,42 @@ config :fire_starter,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :fire_starter, FireStarter.Mailer, adapter: Swoosh.Adapters.Local
+config :epoch, Epoch.Mailer, adapter: Swoosh.Adapters.Local
 
-config :fire_starter_web,
-  ecto_repos: [FireStarter.Repo],
-  generators: [context_app: :fire_starter, binary_id: true]
+config :epoch_web,
+  ecto_repos: [Epoch.Repo],
+  generators: [context_app: :epoch, binary_id: true]
 
 # Configures the endpoint
-config :fire_starter_web, FireStarterWeb.Endpoint,
+config :epoch_web, EpochWeb.Endpoint,
   url: [host: "localhost"],
   adapter: Bandit.PhoenixAdapter,
   render_errors: [
-    formats: [html: FireStarterWeb.ErrorHTML, json: FireStarterWeb.ErrorJSON],
+    formats: [html: EpochWeb.ErrorHTML, json: EpochWeb.ErrorJSON],
     layout: false
   ],
-  pubsub_server: FireStarter.PubSub,
+  pubsub_server: Epoch.PubSub,
   live_view: [signing_salt: "z3yEZopd"]
 
 # Configure esbuild (the version is required)
 config :esbuild,
   version: "0.25.4",
-  fire_starter_web: [
+  epoch_web: [
     args:
       ~w(js/app.js --bundle --target=es2022 --outdir=../priv/static/assets/js --external:/fonts/* --external:/images/* --alias:@=.),
-    cd: Path.expand("../apps/fire_starter_web/assets", __DIR__),
+    cd: Path.expand("../apps/epoch_web/assets", __DIR__),
     env: %{"NODE_PATH" => [Path.expand("../deps", __DIR__), Mix.Project.build_path()]}
   ]
 
 # Configure tailwind (the version is required)
 config :tailwind,
   version: "4.1.7",
-  fire_starter_web: [
+  epoch_web: [
     args: ~w(
       --input=assets/css/app.css
       --output=priv/static/assets/css/app.css
     ),
-    cd: Path.expand("../apps/fire_starter_web", __DIR__)
+    cd: Path.expand("../apps/epoch_web", __DIR__)
   ]
 
 # Configures Elixir's Logger

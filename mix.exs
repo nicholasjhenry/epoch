@@ -1,4 +1,4 @@
-defmodule FireStarter.Umbrella.MixProject do
+defmodule Epoch.Umbrella.MixProject do
   use Mix.Project
 
   def project do
@@ -10,18 +10,18 @@ defmodule FireStarter.Umbrella.MixProject do
       aliases: aliases(),
       listeners: [Phoenix.CodeReloader],
       dialyzer: [
-        plt_file: {:no_warn, "plts/fire_starter.plt"},
+        plt_file: {:no_warn, "plts/epoch.plt"},
         plt_add_apps: [:ex_unit, :mix]
       ],
       releases: [
-        fire_starter_web: [
-          applications: [fire_starter: :permanent, fire_starter_web: :permanent]
+        epoch_web: [
+          applications: [epoch: :permanent, epoch_web: :permanent]
         ]
       ],
 
       # Docs
-      name: "FireStarter",
-      source_url: "https://github.com/nicholasjhenry/fire-starter-umbrella",
+      name: "Epoch",
+      source_url: "https://github.com/nicholasjhenry/epoch-umbrella",
       docs: &docs/0
     ]
   end

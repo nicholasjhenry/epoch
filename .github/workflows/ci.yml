@@ -71,9 +71,9 @@ jobs:
       - name: Run Credo
         run: mix credo --strict
 
-      - name: Set up front end dependencies fire_starter_web
+      - name: Set up front end dependencies epoch_web
         run: |
-          (cd apps/fire_starter_web/assets)
+          (cd apps/epoch_web/assets)
           mix assets.setup
           mix assets.build
 

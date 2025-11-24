@@ -5,18 +5,18 @@ import Config
 # The MIX_TEST_PARTITION environment variable can be used
 # to provide built-in test partitioning in CI environment.
 # Run `mix help test` for more information.
-config :fire_starter, FireStarter.Repo,
+config :epoch, Epoch.Repo,
   username: "postgres",
   password: "postgres",
   hostname: "localhost",
-  database: "fire_starter_test#{System.get_env("MIX_TEST_PARTITION")}",
+  database: "epoch_test#{System.get_env("MIX_TEST_PARTITION")}",
   port: String.to_integer(System.get_env("DATABASE_PORT", "5432")),
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: System.schedulers_online() * 2
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
-config :fire_starter_web, FireStarterWeb.Endpoint,
+config :epoch_web, EpochWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
   secret_key_base: "OpsxEx0BeXV/wdV1QHo7uNDnuidf+yc4L7OYtmzHEK9pcukDzEwCHlxG7TuljwcY",
   server: false
@@ -25,7 +25,7 @@ config :fire_starter_web, FireStarterWeb.Endpoint,
 config :logger, level: :warning
 
 # In test we don't send emails
-config :fire_starter, FireStarter.Mailer, adapter: Swoosh.Adapters.Test
+config :epoch, Epoch.Mailer, adapter: Swoosh.Adapters.Test
 
 # Disable swoosh api client as it is only required for production adapters
 config :swoosh, :api_client, false

@@ -1,4 +1,4 @@
-# 🔥 FireStarter
+# 🔥 Epoch
 
 ---
 
@@ -22,12 +22,12 @@ A starter application template for a Phoenix Umbella project. What do you get?
 ### ✏️ Style Guide and Documentation
 
 - [Style Guide](guides/style_guide/style_guide.md) ([docs](style_guide.html))
-- Documentation deployed to [GitHub Pages](https://nicholasjhenry.github.io/fire-starter-umbrella/)
+- Documentation deployed to [GitHub Pages](https://nicholasjhenry.github.io/epoch-umbrella/)
 
 ### 🚀 CI and Deployment
 
 - [GitHub CI Action](.github/workflows/ci.yml)
-- [Fly.io Configuration](apps/fire_starter_web/fly.toml)
+- [Fly.io Configuration](apps/epoch_web/fly.toml)
 
 🚧 Remove the above documentation when using for your own application.
 
@@ -37,7 +37,7 @@ A starter application template for a Phoenix Umbella project. What do you get?
 
 | Application                                                                            | Description                |
 | -------------------------------------------------------------------------------------- | -------------------------- |
-| [FireStarter](apps/fire_starter/lib/fire_starter.ex) ([docs](fire_starter/index.html)) | Business Application Logic |
+| [Epoch](apps/epoch/lib/epoch.ex) ([docs](epoch/index.html)) | Business Application Logic |
 
 ## Setup
 
@@ -72,5 +72,5 @@ Deploy to [Fly.io](https://fly.io/):
 
 ```sh
 fly auth login # if not authenticated
-fly deploy --config apps/fire_starter_web/fly.toml
+fly deploy --config apps/epoch_web/fly.toml
 ```

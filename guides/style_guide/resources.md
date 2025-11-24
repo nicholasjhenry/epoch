@@ -9,6 +9,6 @@
 Examples:
 
 ```
-fire-starter-staging-web
-fire-starter-staging-db
+epoch-staging-web
+epoch-staging-db
 ```

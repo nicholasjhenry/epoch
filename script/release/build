@@ -7,4 +7,4 @@ set -e
 
 cd "$(dirname "$0")/../.."
 
-docker image build --tag fire-starter-web --file apps/fire_starter_web/Dockerfile .
+docker image build --tag epoch-web --file apps/epoch_web/Dockerfile .
