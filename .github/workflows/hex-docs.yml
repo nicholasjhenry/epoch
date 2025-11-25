@@ -1,8 +1,6 @@
 name: Publish Hex Docs to GitHub Pages
 
 on:
-  push:
-    branches: ["develop"]
   workflow_dispatch:
 
 permissions:
