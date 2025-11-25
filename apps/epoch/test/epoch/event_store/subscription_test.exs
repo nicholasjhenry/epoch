@@ -2,9 +2,9 @@ defmodule Epoch.EventStore.SubscriptionTest do
   use ExUnit.Case, async: false
 
   alias Epoch.EventStore
-  alias Epoch.EventStore.TestEvents.{CounterIncremented, OrderPlaced, OrderShipped}
+  alias Epoch.EventStore.TestEvents.{OrderPlaced, OrderShipped}
 
-  defp unique_stream_name(base \\ "subscription") do
+  defp unique_stream_name(base) do
     "#{base}-#{System.unique_integer([:positive])}"
   end
 

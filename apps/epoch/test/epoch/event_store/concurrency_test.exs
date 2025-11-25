@@ -5,7 +5,7 @@ defmodule Epoch.EventStore.ConcurrencyTest do
   alias Epoch.EventStore.TestEvents.{OrderPlaced, OrderShipped}
   alias Epoch.EventStore.VersionMismatchError
 
-  defp unique_stream_name(base \\ "concurrency") do
+  defp unique_stream_name(base) do
     "#{base}-#{System.unique_integer([:positive])}"
   end
 

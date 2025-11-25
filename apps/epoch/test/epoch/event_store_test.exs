@@ -128,7 +128,7 @@ defmodule Epoch.EventStoreTest do
   end
 
   # Use unique stream names per test to avoid interference
-  defp unique_stream_name(base \\ "test-stream") do
+  defp unique_stream_name(base) do
     "#{base}-#{System.unique_integer([:positive])}"
   end
 
