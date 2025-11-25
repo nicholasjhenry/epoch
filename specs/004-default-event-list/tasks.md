@@ -25,7 +25,7 @@
 
 **Purpose**: No new setup required - this feature extends existing infrastructure
 
-- [ ] T001 Verify Feature 001 (EventStore) and Feature 003 (Stream Type Filter) are complete by running `mix test`
+- [x] T001 Verify Feature 001 (EventStore) and Feature 003 (Stream Type Filter) are complete by running `mix test`
 
 ---
 
@@ -37,18 +37,18 @@
 
 ### Unit Tests (write first, must fail)
 
-- [ ] T002 [P] Add unit test: `read_all_events/2` returns events from all streams in `apps/epoch/test/epoch/event_store_test.exs`
-- [ ] T003 [P] Add unit test: `read_all_events/2` returns events in chronological order by log_position in `apps/epoch/test/epoch/event_store_test.exs`
-- [ ] T004 [P] Add unit test: `read_all_events/2` pagination works correctly (page 1, page 2, etc.) in `apps/epoch/test/epoch/event_store_test.exs`
-- [ ] T005 [P] Add unit test: `read_all_events/2` returns empty result for empty store in `apps/epoch/test/epoch/event_store_test.exs`
-- [ ] T006 [P] Add unit test: PubSub broadcasts to `"all_events"` topic on any append in `apps/epoch/test/epoch/event_store_test.exs`
+- [x] T002 [P] Add unit test: `read_all_events/2` returns events from all streams in `apps/epoch/test/epoch/event_store_test.exs`
+- [x] T003 [P] Add unit test: `read_all_events/2` returns events in chronological order by log_position in `apps/epoch/test/epoch/event_store_test.exs`
+- [x] T004 [P] Add unit test: `read_all_events/2` pagination works correctly (page 1, page 2, etc.) in `apps/epoch/test/epoch/event_store_test.exs`
+- [x] T005 [P] Add unit test: `read_all_events/2` returns empty result for empty store in `apps/epoch/test/epoch/event_store_test.exs`
+- [x] T006 [P] Add unit test: PubSub broadcasts to `"all_events"` topic on any append in `apps/epoch/test/epoch/event_store_test.exs`
 
 ### Implementation
 
-- [ ] T007 Implement `read_all_events/2` function in `apps/epoch/lib/epoch/event_store.ex` with pagination support
-- [ ] T008 Add `handle_call({:read_all_events, opts}, ...)` clause in `apps/epoch/lib/epoch/event_store.ex`
-- [ ] T009 Add `broadcast_to_all_events/2` helper function in `apps/epoch/lib/epoch/event_store.ex`
-- [ ] T010 Call `broadcast_to_all_events/2` in existing `do_append/4` function in `apps/epoch/lib/epoch/event_store.ex`
+- [x] T007 Implement `read_all_events/2` function in `apps/epoch/lib/epoch/event_store.ex` with pagination support
+- [x] T008 Add `handle_call({:read_all_events, opts}, ...)` clause in `apps/epoch/lib/epoch/event_store.ex`
+- [x] T009 Add `broadcast_to_all_events/2` helper function in `apps/epoch/lib/epoch/event_store.ex`
+- [x] T010 Call `broadcast_to_all_events/2` in existing `do_append/4` function in `apps/epoch/lib/epoch/event_store.ex`
 
 **Checkpoint**: Run `mix test apps/epoch/test/epoch/event_store_test.exs` - all new tests should pass
 
@@ -62,18 +62,18 @@
 
 ### Tests for User Story 1 (write first, must fail) ⚠️
 
-- [ ] T011 [P] [US1] Add integration test: displays all events on initial load in `apps/epoch_web/test/epoch_web/live/dev/events_live_test.exs`
-- [ ] T012 [P] [US1] Add integration test: shows "No events in store" message when empty in `apps/epoch_web/test/epoch_web/live/dev/events_live_test.exs`
-- [ ] T013 [P] [US1] Add integration test: pagination works in default view (50 events, navigate pages) in `apps/epoch_web/test/epoch_web/live/dev/events_live_test.exs`
+- [x] T011 [P] [US1] Add integration test: displays all events on initial load in `apps/epoch_web/test/epoch_web/live/dev/events_live_test.exs`
+- [x] T012 [P] [US1] Add integration test: shows "No events in store" message when empty in `apps/epoch_web/test/epoch_web/live/dev/events_live_test.exs`
+- [x] T013 [P] [US1] Add integration test: pagination works in default view (50 events, navigate pages) in `apps/epoch_web/test/epoch_web/live/dev/events_live_test.exs`
 
 ### Implementation for User Story 1
 
-- [ ] T014 [US1] Add `:view_mode` assign (`:all` | `:filtered`) to mount in `apps/epoch_web/lib/epoch_web/live/dev/events_live.ex`
-- [ ] T015 [US1] Subscribe to `"all_events"` topic on mount (when connected) in `apps/epoch_web/lib/epoch_web/live/dev/events_live.ex`
-- [ ] T016 [US1] Add `load_all_events/1` helper function that calls `EventStore.read_all_events/2` in `apps/epoch_web/lib/epoch_web/live/dev/events_live.ex`
-- [ ] T017 [US1] Call `load_all_events/1` on mount to populate events stream in `apps/epoch_web/lib/epoch_web/live/dev/events_live.ex`
-- [ ] T018 [US1] Update template empty state: show "No events in store" when `view_mode == :all` and empty in `apps/epoch_web/lib/epoch_web/live/dev/events_live.ex`
-- [ ] T019 [US1] Update template empty state: show "No events match filter '[type]'" when `view_mode == :filtered` and empty in `apps/epoch_web/lib/epoch_web/live/dev/events_live.ex`
+- [x] T014 [US1] Add `:view_mode` assign (`:all` | `:filtered`) to mount in `apps/epoch_web/lib/epoch_web/live/dev/events_live.ex`
+- [x] T015 [US1] Subscribe to `"all_events"` topic on mount (when connected) in `apps/epoch_web/lib/epoch_web/live/dev/events_live.ex`
+- [x] T016 [US1] Add `load_all_events/1` helper function that calls `EventStore.read_all_events/2` in `apps/epoch_web/lib/epoch_web/live/dev/events_live.ex`
+- [x] T017 [US1] Call `load_all_events/1` on mount to populate events stream in `apps/epoch_web/lib/epoch_web/live/dev/events_live.ex`
+- [x] T018 [US1] Update template empty state: show "No events in store" when `view_mode == :all` and empty in `apps/epoch_web/lib/epoch_web/live/dev/events_live.ex`
+- [x] T019 [US1] Update template empty state: show "No events match filter '[type]'" when `view_mode == :filtered` and empty in `apps/epoch_web/lib/epoch_web/live/dev/events_live.ex`
 
 **Checkpoint**: User Story 1 complete - opening viewer shows all events immediately
 
@@ -87,12 +87,12 @@
 
 ### Tests for User Story 2 (write first, must fail) ⚠️
 
-- [ ] T020 [P] [US2] Add integration test: receives live updates for any stream in default view in `apps/epoch_web/test/epoch_web/live/dev/events_live_test.exs`
-- [ ] T021 [P] [US2] Add integration test: multiple concurrent viewers receive independent updates in `apps/epoch_web/test/epoch_web/live/dev/events_live_test.exs`
+- [x] T020 [P] [US2] Add integration test: receives live updates for any stream in default view in `apps/epoch_web/test/epoch_web/live/dev/events_live_test.exs`
+- [x] T021 [P] [US2] Add integration test: multiple concurrent viewers receive independent updates in `apps/epoch_web/test/epoch_web/live/dev/events_live_test.exs`
 
 ### Implementation for User Story 2
 
-- [ ] T022 [US2] Verify existing `handle_info({:events_appended, ...}, socket)` handles messages from `"all_events"` topic in `apps/epoch_web/lib/epoch_web/live/dev/events_live.ex`
+- [x] T022 [US2] Verify existing `handle_info({:events_appended, ...}, socket)` handles messages from `"all_events"` topic in `apps/epoch_web/lib/epoch_web/live/dev/events_live.ex`
 
 **Checkpoint**: User Story 2 complete - new events appear in real-time without refresh
 
@@ -106,18 +106,18 @@
 
 ### Tests for User Story 3 (write first, must fail) ⚠️
 
-- [ ] T023 [P] [US3] Add integration test: transitions from default to filtered view in `apps/epoch_web/test/epoch_web/live/dev/events_live_test.exs`
-- [ ] T024 [P] [US3] Add integration test: transitions from filtered to default view (clear filter) in `apps/epoch_web/test/epoch_web/live/dev/events_live_test.exs`
-- [ ] T025 [P] [US3] Add integration test: live updates work correctly after clearing filter in `apps/epoch_web/test/epoch_web/live/dev/events_live_test.exs`
+- [x] T023 [P] [US3] Add integration test: transitions from default to filtered view in `apps/epoch_web/test/epoch_web/live/dev/events_live_test.exs`
+- [x] T024 [P] [US3] Add integration test: transitions from filtered to default view (clear filter) in `apps/epoch_web/test/epoch_web/live/dev/events_live_test.exs`
+- [x] T025 [P] [US3] Add integration test: live updates work correctly after clearing filter in `apps/epoch_web/test/epoch_web/live/dev/events_live_test.exs`
 
 ### Implementation for User Story 3
 
-- [ ] T026 [US3] Update `handle_event("filter", ...)` to unsubscribe from `"all_events"` when `view_mode == :all` in `apps/epoch_web/lib/epoch_web/live/dev/events_live.ex`
-- [ ] T027 [US3] Update `handle_event("filter", ...)` to set `view_mode: :filtered` in `apps/epoch_web/lib/epoch_web/live/dev/events_live.ex`
-- [ ] T028 [US3] Implement `handle_event("clear_filter", ...)` to unsubscribe from stream type topic in `apps/epoch_web/lib/epoch_web/live/dev/events_live.ex`
-- [ ] T029 [US3] Implement `handle_event("clear_filter", ...)` to subscribe to `"all_events"` topic in `apps/epoch_web/lib/epoch_web/live/dev/events_live.ex`
-- [ ] T030 [US3] Implement `handle_event("clear_filter", ...)` to call `load_all_events/1` and set `view_mode: :all` in `apps/epoch_web/lib/epoch_web/live/dev/events_live.ex`
-- [ ] T031 [US3] Add "Clear" button to template that triggers `"clear_filter"` event (visible when `view_mode == :filtered`) in `apps/epoch_web/lib/epoch_web/live/dev/events_live.ex`
+- [x] T026 [US3] Update `handle_event("filter", ...)` to unsubscribe from `"all_events"` when `view_mode == :all` in `apps/epoch_web/lib/epoch_web/live/dev/events_live.ex`
+- [x] T027 [US3] Update `handle_event("filter", ...)` to set `view_mode: :filtered` in `apps/epoch_web/lib/epoch_web/live/dev/events_live.ex`
+- [x] T028 [US3] Implement `handle_event("clear_filter", ...)` to unsubscribe from stream type topic in `apps/epoch_web/lib/epoch_web/live/dev/events_live.ex`
+- [x] T029 [US3] Implement `handle_event("clear_filter", ...)` to subscribe to `"all_events"` topic in `apps/epoch_web/lib/epoch_web/live/dev/events_live.ex`
+- [x] T030 [US3] Implement `handle_event("clear_filter", ...)` to call `load_all_events/1` and set `view_mode: :all` in `apps/epoch_web/lib/epoch_web/live/dev/events_live.ex`
+- [x] T031 [US3] Add "Clear" button to template that triggers `"clear_filter"` event (visible when `view_mode == :filtered`) in `apps/epoch_web/lib/epoch_web/live/dev/events_live.ex`
 
 **Checkpoint**: User Story 3 complete - seamless transitions between default and filtered views
 
@@ -127,8 +127,8 @@
 
 **Purpose**: Final validation and cleanup
 
-- [ ] T032 Run `mix test` to verify all tests pass
-- [ ] T033 Run `mix precommit` to verify code quality
+- [x] T032 Run `mix test` to verify all tests pass
+- [x] T033 Run `mix precommit` to verify code quality
 - [ ] T034 Manual verification per quickstart.md: open viewer, verify events load, test live updates, test filter transitions
 
 ---

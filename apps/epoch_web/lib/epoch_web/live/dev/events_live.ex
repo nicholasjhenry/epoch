@@ -11,16 +11,20 @@ defmodule EpochWeb.Dev.EventsLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok,
-     socket
-     |> assign(:stream_type, nil)
-     |> assign(:page, 1)
-     |> assign(:page_size, 20)
-     |> assign(:has_more, false)
-     |> assign(:total, 0)
-     |> assign(:events_empty?, true)
-     |> stream_configure(:events, dom_id: &event_dom_id/1)
-     |> stream(:events, [])}
+    if connected?(socket) do
+      Phoenix.PubSub.subscribe(Epoch.PubSub, "all_events")
+    end
+
+    socket =
+      socket
+      |> assign(:view_mode, :all)
+      |> assign(:stream_type, nil)
+      |> assign(:page, 1)
+      |> assign(:page_size, 20)
+      |> stream_configure(:events, dom_id: &event_dom_id/1)
+      |> load_all_events()
+
+    {:ok, socket}
   end
 
   @impl true
@@ -30,15 +34,7 @@ defmodule EpochWeb.Dev.EventsLive do
     if stream_type == "" do
       {:noreply, put_flash(socket, :error, "Stream type is required")}
     else
-      # Unsubscribe from old topic if any
-      if socket.assigns.stream_type && connected?(socket) do
-        Phoenix.PubSub.unsubscribe(Epoch.PubSub, "stream_type:#{socket.assigns.stream_type}")
-      end
-
-      # Subscribe to new topic for live updates
-      if connected?(socket) do
-        Phoenix.PubSub.subscribe(Epoch.PubSub, "stream_type:#{stream_type}")
-      end
+      maybe_switch_to_filtered_subscription(socket, stream_type)
 
       case EventStore.read_by_stream_type(stream_type,
              page: 1,
@@ -47,6 +43,7 @@ defmodule EpochWeb.Dev.EventsLive do
         {:ok, result} ->
           {:noreply,
            socket
+           |> assign(:view_mode, :filtered)
            |> assign(:stream_type, stream_type)
            |> assign(:page, 1)
            |> assign(:has_more, result.has_more)
@@ -62,59 +59,48 @@ defmodule EpochWeb.Dev.EventsLive do
 
   @impl true
   def handle_event("clear_filter", _params, socket) do
-    # Unsubscribe from current topic
-    if socket.assigns.stream_type && connected?(socket) do
-      Phoenix.PubSub.unsubscribe(Epoch.PubSub, "stream_type:#{socket.assigns.stream_type}")
+    if connected?(socket) do
+      # Unsubscribe from stream type topic
+      if socket.assigns.stream_type do
+        Phoenix.PubSub.unsubscribe(Epoch.PubSub, "stream_type:#{socket.assigns.stream_type}")
+      end
+
+      # Subscribe to all_events topic
+      Phoenix.PubSub.subscribe(Epoch.PubSub, "all_events")
     end
 
-    {:noreply,
-     socket
-     |> assign(:stream_type, nil)
-     |> assign(:page, 1)
-     |> assign(:has_more, false)
-     |> assign(:total, 0)
-     |> assign(:events_empty?, true)
-     |> stream(:events, [], reset: true)}
+    socket =
+      socket
+      |> assign(:view_mode, :all)
+      |> assign(:stream_type, nil)
+      |> assign(:page, 1)
+      |> load_all_events()
+
+    {:noreply, socket}
   end
 
   @impl true
   def handle_event("next_page", _params, socket) do
     new_page = socket.assigns.page + 1
 
-    case EventStore.read_by_stream_type(socket.assigns.stream_type,
-           page: new_page,
-           page_size: socket.assigns.page_size
-         ) do
-      {:ok, result} ->
-        {:noreply,
-         socket
-         |> assign(:page, new_page)
-         |> assign(:has_more, result.has_more)
-         |> stream(:events, result.events, reset: true)}
+    socket =
+      socket
+      |> assign(:page, new_page)
+      |> load_events_for_current_mode()
 
-      {:error, reason} ->
-        {:noreply, put_flash(socket, :error, reason)}
-    end
+    {:noreply, socket}
   end
 
   @impl true
   def handle_event("prev_page", _params, socket) do
     new_page = max(1, socket.assigns.page - 1)
 
-    case EventStore.read_by_stream_type(socket.assigns.stream_type,
-           page: new_page,
-           page_size: socket.assigns.page_size
-         ) do
-      {:ok, result} ->
-        {:noreply,
-         socket
-         |> assign(:page, new_page)
-         |> assign(:has_more, result.has_more)
-         |> stream(:events, result.events, reset: true)}
+    socket =
+      socket
+      |> assign(:page, new_page)
+      |> load_events_for_current_mode()
 
-      {:error, reason} ->
-        {:noreply, put_flash(socket, :error, reason)}
-    end
+    {:noreply, socket}
   end
 
   @impl true
@@ -146,31 +132,6 @@ defmodule EpochWeb.Dev.EventsLive do
       # On other pages, just update the total count
       {:noreply, assign(socket, :total, socket.assigns.total + length(events))}
     end
-  end
-
-  # Helper to extract readable event type name from struct
-  defp event_type_name(event) when is_struct(event) do
-    event.__struct__
-    |> Module.split()
-    |> List.last()
-  end
-
-  defp event_type_name(event) when is_map(event) do
-    Map.get(event, :type, "Event")
-  end
-
-  defp event_type_name(_event), do: "Event"
-
-  # Generate unique DOM ID for stream items
-  defp event_dom_id(%{metadata: %{event_id: id}}), do: "event-#{id}"
-
-  defp event_dom_id(%{metadata: metadata}) when is_struct(metadata) do
-    "event-#{metadata.event_id}"
-  end
-
-  defp event_dom_id(%{event: event, stream_name: name}) do
-    hash = :erlang.phash2({name, event})
-    "event-#{hash}"
   end
 
   @impl true
@@ -207,19 +168,26 @@ defmodule EpochWeb.Dev.EventsLive do
       </.form>
 
       <%!-- Results Summary --%>
-      <div :if={@stream_type} class="mb-4 text-gray-600">
+      <div :if={@total > 0} class="mb-4 text-gray-600">
         <p>
-          Showing events for type "<strong class="text-gray-900">{@stream_type}</strong>"
-          ({@total} total)
+          <%= if @view_mode == :filtered do %>
+            Showing events for type "<strong class="text-gray-900">{@stream_type}</strong>"
+            ({@total} total)
+          <% else %>
+            Showing all events ({@total} total)
+          <% end %>
         </p>
       </div>
 
       <%!-- Empty State Message --%>
       <div :if={@events_empty?} class="text-gray-500 text-center py-8">
-        <%= if @stream_type do %>
-          No events found for type "{@stream_type}"
-        <% else %>
-          Enter a stream type to view events
+        <%= cond do %>
+          <% @view_mode == :all -> %>
+            No events in store
+          <% @view_mode == :filtered -> %>
+            No events found for type "{@stream_type}"
+          <% true -> %>
+            No events in store
         <% end %>
       </div>
 
@@ -242,7 +210,7 @@ defmodule EpochWeb.Dev.EventsLive do
       </div>
 
       <%!-- Pagination --%>
-      <div :if={@stream_type && @total > 0} class="mt-6 flex items-center justify-center gap-4">
+      <div :if={@total > 0} class="mt-6 flex items-center justify-center gap-4">
         <button
           phx-click="prev_page"
           disabled={@page == 1}
@@ -269,5 +237,91 @@ defmodule EpochWeb.Dev.EventsLive do
       </div>
     </div>
     """
+  end
+
+  # Private helper functions
+
+  defp load_all_events(socket) do
+    {:ok, result} =
+      EventStore.read_all_events(
+        page: socket.assigns.page,
+        page_size: socket.assigns.page_size
+      )
+
+    socket
+    |> assign(:has_more, result.has_more)
+    |> assign(:total, result.total)
+    |> assign(:events_empty?, result.events == [])
+    |> stream(:events, result.events, reset: true)
+  end
+
+  defp maybe_switch_to_filtered_subscription(socket, new_stream_type) do
+    if connected?(socket) do
+      unsubscribe_current_topic(socket)
+      Phoenix.PubSub.subscribe(Epoch.PubSub, "stream_type:#{new_stream_type}")
+    end
+  end
+
+  defp unsubscribe_current_topic(socket) do
+    case socket.assigns.view_mode do
+      :all ->
+        Phoenix.PubSub.unsubscribe(Epoch.PubSub, "all_events")
+
+      :filtered ->
+        if socket.assigns.stream_type do
+          Phoenix.PubSub.unsubscribe(Epoch.PubSub, "stream_type:#{socket.assigns.stream_type}")
+        end
+    end
+  end
+
+  defp load_events_for_current_mode(socket) do
+    case socket.assigns.view_mode do
+      :all ->
+        load_all_events(socket)
+
+      :filtered ->
+        load_filtered_events(socket)
+    end
+  end
+
+  defp load_filtered_events(socket) do
+    case EventStore.read_by_stream_type(socket.assigns.stream_type,
+           page: socket.assigns.page,
+           page_size: socket.assigns.page_size
+         ) do
+      {:ok, result} ->
+        socket
+        |> assign(:has_more, result.has_more)
+        |> assign(:total, result.total)
+        |> assign(:events_empty?, result.events == [])
+        |> stream(:events, result.events, reset: true)
+
+      {:error, reason} ->
+        socket
+        |> put_flash(:error, reason)
+    end
+  end
+
+  defp event_type_name(event) when is_struct(event) do
+    event.__struct__
+    |> Module.split()
+    |> List.last()
+  end
+
+  defp event_type_name(event) when is_map(event) do
+    Map.get(event, :type, "Event")
+  end
+
+  defp event_type_name(_event), do: "Event"
+
+  defp event_dom_id(%{metadata: %{event_id: id}}), do: "event-#{id}"
+
+  defp event_dom_id(%{metadata: metadata}) when is_struct(metadata) do
+    "event-#{metadata.event_id}"
+  end
+
+  defp event_dom_id(%{event: event, stream_name: name}) do
+    hash = :erlang.phash2({name, event})
+    "event-#{hash}"
   end
 end

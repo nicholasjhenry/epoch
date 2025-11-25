@@ -274,6 +274,43 @@ defmodule Epoch.EventStore do
         }
 
   @doc """
+  Reads all events from all streams, ordered by global position.
+
+  ## Options
+
+    * `:page` - Page number (1-indexed). Defaults to 1.
+    * `:page_size` - Number of events per page. Defaults to 20. Max 100.
+
+  ## Returns
+
+    * `{:ok, %{events: [...], has_more: boolean(), total: integer()}}` on success
+
+  ## Examples
+
+      {:ok, result} = EventStore.read_all_events()
+      # => {:ok, %{events: [...], has_more: false, total: 5}}
+
+      {:ok, result} = EventStore.read_all_events(page: 2, page_size: 10)
+
+  """
+  @spec read_all_events(keyword()) :: {:ok, filtered_events_result()}
+  def read_all_events(opts \\ []) do
+    read_all_events(__MODULE__, opts)
+  end
+
+  @doc """
+  Reads all events from a specific EventStore instance.
+  """
+  @spec read_all_events(GenServer.server(), keyword()) :: {:ok, filtered_events_result()}
+  def read_all_events(server, opts) do
+    with :ok <- validate_pagination_opts(opts) do
+      page = Keyword.get(opts, :page, 1)
+      page_size = Keyword.get(opts, :page_size, 20)
+      GenServer.call(server, {:read_all_events, page, page_size})
+    end
+  end
+
+  @doc """
   Reads events from all streams matching the given stream type.
 
   The stream type is matched by prefix - for example, type "order" matches
@@ -380,6 +417,35 @@ defmodule Epoch.EventStore do
     stream = Map.get(state.streams, stream_name, %{events: [], version: 0})
     events = extract_events(stream.events, from, to, max_count)
     {:reply, {:ok, %{events: events, version: stream.version}}, state}
+  end
+
+  @impl true
+  def handle_call({:read_all_events, page, page_size}, _from, state) do
+    # Collect all events from all streams
+    all_events =
+      state.streams
+      |> Enum.flat_map(fn {stream_name, stream_data} ->
+        Enum.map(stream_data.events, fn envelope ->
+          %{
+            event: envelope.event,
+            stream_name: stream_name,
+            metadata: envelope.metadata
+          }
+        end)
+      end)
+      |> Enum.sort_by(& &1.metadata.log_position)
+
+    total = length(all_events)
+    offset = (page - 1) * page_size
+
+    events =
+      all_events
+      |> Enum.drop(offset)
+      |> Enum.take(page_size)
+
+    has_more = offset + page_size < total
+
+    {:reply, {:ok, %{events: events, has_more: has_more, total: total}}, state}
   end
 
   @impl true
@@ -547,7 +613,18 @@ defmodule Epoch.EventStore do
     # Broadcast to stream type topic for live updates (with envelopes for metadata)
     broadcast_to_stream_type(stream_name, envelopes)
 
+    # Broadcast to all_events topic for default view live updates
+    broadcast_to_all_events(stream_name, envelopes)
+
     {new_state, new_stream.version}
+  end
+
+  defp broadcast_to_all_events(stream_name, events) do
+    Phoenix.PubSub.broadcast(
+      Epoch.PubSub,
+      "all_events",
+      {:events_appended, stream_name, events}
+    )
   end
 
   defp broadcast_to_stream_type(stream_name, events) do
