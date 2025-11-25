@@ -24,9 +24,9 @@
 
 **Purpose**: Project initialization and test infrastructure
 
-- [ ] T001 Create test file structure for unit tests in apps/epoch/test/epoch/event_store/stream_type_filter_test.exs
-- [ ] T002 [P] Create test file structure for integration tests in apps/epoch_web/test/epoch_web/live/dev/events_live_test.exs
-- [ ] T003 [P] Create LiveView directory structure at apps/epoch_web/lib/epoch_web/live/dev/
+- [X] T001 Create test file structure for unit tests in apps/epoch/test/epoch/event_store/stream_type_filter_test.exs
+- [X] T002 [P] Create test file structure for integration tests in apps/epoch_web/test/epoch_web/live/dev/events_live_test.exs
+- [X] T003 [P] Create LiveView directory structure at apps/epoch_web/lib/epoch_web/live/dev/
 
 ---
 
@@ -38,7 +38,7 @@
 
 ### Tests for Foundational (write first)
 
-- [ ] T004 [P] Write unit tests for extract_stream_type/1 helper in apps/epoch/test/epoch/event_store/stream_type_filter_test.exs
+- [X] T004 [P] Write unit tests for extract_stream_type/1 helper in apps/epoch/test/epoch/event_store/stream_type_filter_test.exs
   - Test extracting "order" from "order-123"
   - Test extracting "order" from "order-456-item" (first hyphen only)
   - Test edge case: stream with no hyphen returns full name
@@ -46,8 +46,8 @@
 
 ### Implementation for Foundational
 
-- [ ] T005 Implement extract_stream_type/1 helper function in apps/epoch/lib/epoch/event_store.ex
-- [ ] T006 Add route `/dev/events` to dev-only scope in apps/epoch_web/lib/epoch_web/router.ex
+- [X] T005 Implement extract_stream_type/1 helper function in apps/epoch/lib/epoch/event_store.ex
+- [X] T006 Add route `/dev/events` to dev-only scope in apps/epoch_web/lib/epoch_web/router.ex
 
 **Checkpoint**: Foundation ready - `extract_stream_type/1` passes all tests, route configured
 
@@ -61,20 +61,20 @@
 
 ### Tests for User Story 1 (write first)
 
-- [ ] T007 [P] [US1] Write unit tests for read_by_stream_type/3 filtering logic in apps/epoch/test/epoch/event_store/stream_type_filter_test.exs
+- [X] T007 [P] [US1] Write unit tests for read_by_stream_type/3 filtering logic in apps/epoch/test/epoch/event_store/stream_type_filter_test.exs
   - Test filtering returns events from all matching streams
   - Test filtering excludes events from non-matching streams
   - Test results are ordered by global position (chronological)
   - Test empty filter input is rejected with error
   - Test non-existent type returns empty list (not error)
 
-- [ ] T008 [P] [US1] Write unit tests for read_by_stream_type/3 validation in apps/epoch/test/epoch/event_store/stream_type_filter_test.exs
+- [X] T008 [P] [US1] Write unit tests for read_by_stream_type/3 validation in apps/epoch/test/epoch/event_store/stream_type_filter_test.exs
   - Test whitespace-only stream_type rejected
   - Test page < 1 rejected
   - Test page_size < 1 rejected
   - Test page_size > 100 rejected
 
-- [ ] T009 [P] [US1] Write integration test for LiveView filter workflow in apps/epoch_web/test/epoch_web/live/dev/events_live_test.exs
+- [X] T009 [P] [US1] Write integration test for LiveView filter workflow in apps/epoch_web/test/epoch_web/live/dev/events_live_test.exs
   - Test mounting at /dev/events
   - Test entering filter text and submitting
   - Test filter results update display
@@ -82,26 +82,26 @@
 
 ### Implementation for User Story 1
 
-- [ ] T010 [US1] Implement read_by_stream_type/3 function in apps/epoch/lib/epoch/event_store.ex
+- [X] T010 [US1] Implement read_by_stream_type/3 function in apps/epoch/lib/epoch/event_store.ex
   - Add validation for stream_type, page, page_size
   - Add GenServer.call handler for {:read_by_stream_type, ...}
   - Filter streams by type, collect events, sort by log_position
   - Apply pagination and return filtered_events_result
 
-- [ ] T011 [US1] Create basic EventsLive module skeleton in apps/epoch_web/lib/epoch_web/live/dev/events_live.ex
+- [X] T011 [US1] Create basic EventsLive module skeleton in apps/epoch_web/lib/epoch_web/live/dev/events_live.ex
   - Implement mount/3 with initial assigns (stream_type, page, page_size, has_more, total, events_empty?)
   - Initialize :events stream
 
-- [ ] T012 [US1] Implement filter event handler in apps/epoch_web/lib/epoch_web/live/dev/events_live.ex
+- [X] T012 [US1] Implement filter event handler in apps/epoch_web/lib/epoch_web/live/dev/events_live.ex
   - Handle "filter" event with stream_type param
   - Validate input, call EventStore.read_by_stream_type/2
   - Update assigns and reset events stream with results
 
-- [ ] T013 [US1] Implement clear_filter event handler in apps/epoch_web/lib/epoch_web/live/dev/events_live.ex
+- [X] T013 [US1] Implement clear_filter event handler in apps/epoch_web/lib/epoch_web/live/dev/events_live.ex
   - Clear stream_type assign
   - Reset events stream to empty
 
-- [ ] T014 [US1] Implement LiveView template in apps/epoch_web/lib/epoch_web/live/dev/events_live.ex
+- [X] T014 [US1] Implement LiveView template in apps/epoch_web/lib/epoch_web/live/dev/events_live.ex
   - Filter form with stream_type input (#filter-form)
   - Results summary showing type and total count
   - Events list with phx-update="stream" (#events)
