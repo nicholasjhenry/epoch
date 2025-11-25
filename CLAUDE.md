@@ -462,6 +462,8 @@ And **never** do this:
 ## Active Technologies
 - Elixir ~> 1.15 + None (pure Elixir/OTP implementation) (001-elixir-event-store)
 - In-memory (GenServer state with Map-based storage) (001-elixir-event-store)
+- Elixir 1.19.2 / OTP 28.1.1 (requirement: ~> 1.15) + Phoenix 1.8.1, Phoenix LiveView 1.1.17, Ecto 3.13, Jason 1.2 (002-product-index-liveview)
+- PostgreSQL via Ecto (for future persistence); In-memory EventStore for cart sessions (002-product-index-liveview)
 
 ## Recent Changes
 - 001-elixir-event-store: Added Elixir ~> 1.15 + None (pure Elixir/OTP implementation)

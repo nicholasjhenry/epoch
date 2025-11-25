@@ -1,0 +1,62 @@
+<nav id="nav-main" class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="/">
+      <strong>Epoch Coffee</strong>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start">
+      <.link navigate={~p"/products"} id="nav-products" class="navbar-item">
+        <span class="icon"><i class="fas fa-store"></i></span>
+        <span>Products</span>
+      </.link>
+      <.link href="/cart" id="nav-cart" class="navbar-item">
+        <span class="icon"><i class="fas fa-shopping-cart"></i></span>
+        <span>Cart</span>
+      </.link>
+      <.link href="/spec" id="nav-spec" class="navbar-item">
+        <span class="icon"><i class="fas fa-vial"></i></span>
+        <span>Spec</span>
+      </.link>
+      <.link href="/backoffice" id="nav-backoffice" class="navbar-item">
+        <span class="icon"><i class="fas fa-cogs"></i></span>
+        <span>Backoffice</span>
+      </.link>
+    </div>
+  </div>
+</nav>
+
+<section class="section">
+  <div class="container">
+    <h1 class="title">Our Coffee Products</h1>
+    <div id="product-list" class="columns is-multiline">
+      <div
+        :for={product <- @products}
+        id={"product-#{product.product_id}"}
+        class="column is-one-third"
+      >
+        <div class="card">
+          <div class="card-content">
+            <p id={"product-name-#{product.product_id}"} class="title is-4">
+              {product.name}
+            </p>
+            <p class="content">{product.description}</p>
+            <p id={"product-price-#{product.product_id}"} class="subtitle is-5 has-text-primary">
+              {format_price(product.price)}
+            </p>
+          </div>
+          <footer class="card-footer">
+            <button
+              id={"add-item-#{product.product_id}"}
+              class="card-footer-item button is-primary"
+              phx-click="add_to_cart"
+              phx-value-product-id={product.product_id}
+            >
+              Add Item
+            </button>
+          </footer>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
