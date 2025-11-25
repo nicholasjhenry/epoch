@@ -458,3 +458,10 @@ And **never** do this:
 
 <!-- phoenix:phoenix-end -->
 <!-- usage-rules-end -->
+
+## Active Technologies
+- Elixir ~> 1.15 + None (pure Elixir/OTP implementation) (001-elixir-event-store)
+- In-memory (GenServer state with Map-based storage) (001-elixir-event-store)
+
+## Recent Changes
+- 001-elixir-event-store: Added Elixir ~> 1.15 + None (pure Elixir/OTP implementation)
