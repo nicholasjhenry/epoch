@@ -1,20 +1,30 @@
 <!--
 Sync Impact Report
-Version change: 1.1.0 -> 1.2.0
+Version change: 1.2.0 -> 1.3.0
 Modified principles: None
-Added sections: Pre-Commit Validation (new NON-NEGOTIABLE principle under Engineering Standards)
+Added sections: Review Available Skills (new NON-NEGOTIABLE principle under Core Principles)
 Removed sections: None
 Templates requiring updates:
-- ✅ .specify/templates/plan-template.md (no changes needed)
+- ✅ .specify/templates/plan-template.md (already has skill-driven implementation in Constitution Check)
 - ✅ .specify/templates/spec-template.md (no changes needed)
 - ✅ .specify/templates/tasks-template.md (no changes needed)
-- ✅ CLAUDE.md (already contains mix precommit guidance)
+- ✅ CLAUDE.md (already contains Review Available Skills guidance - this amendment formalizes it)
 Follow-up TODOs: None - all templates aligned with new principle
 -->
 
 # ReviewRoom Constitution
 
 ## Core Principles
+
+### Review Available Skills (NON-NEGOTIABLE)
+- Review all available project-scoped and user-scoped agent skills BEFORE starting any task to determine applicability.
+- Skills are specialized capability packages containing instructions, scripts, and resources that provide domain-specific expertise.
+- Use the Skill tool or `/help` command to discover available skills; common skills include `elixir-core`, `phoenix-liveview`, `ecto`, `elixir-testing`, `task-based-ui`, and `test-heuristics`.
+- Invoke relevant skills BEFORE generating implementation code, writing tests, designing UIs, or making architectural decisions.
+- Skills encode authoritative patterns and conventions that MUST be followed; deviations require explicit justification.
+- Block implementation when applicable skills have not been consulted for the task domain.
+
+**Rationale**: Agent skills package ecosystem-specific and project-specific expertise that prevents reinventing solutions, ensures consistency, and reduces review cycles. Skill consultation catches convention violations before they propagate through the codebase.
 
 ### Test-First Development (NON-NEGOTIABLE)
 - Write failing automated tests and secure reviewer approval before implementing production code or refactors.
@@ -95,4 +105,4 @@ Follow-up TODOs: None - all templates aligned with new principle
 - Compliance is reviewed in every pull request; merges are blocked until the Constitution Check passes and mandated tests exist and fail prior to implementation.
 - Track ratification and amendment metadata in this document and reference the governing version in commit messages when altering process.
 
-**Version**: 1.2.0 | **Ratified**: 2025-10-30 | **Last Amended**: 2025-11-16
+**Version**: 1.3.0 | **Ratified**: 2025-10-30 | **Last Amended**: 2025-11-25
