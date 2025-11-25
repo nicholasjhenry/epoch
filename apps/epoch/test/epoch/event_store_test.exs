@@ -11,6 +11,122 @@ defmodule Epoch.EventStoreTest do
     OrderShipped
   }
 
+  # ==========================================================================
+  # Feature 004: Default Event List - read_all_events/2
+  # ==========================================================================
+
+  describe "read_all_events/2" do
+    test "returns events from all streams" do
+      # Use a fresh EventStore to avoid interference from parallel tests
+      {:ok, pid} = EventStore.start_link(name: :all_streams_test)
+
+      stream1 = unique_stream_name("all-events-1")
+      stream2 = unique_stream_name("all-events-2")
+      stream3 = unique_stream_name("all-events-3")
+
+      {:ok, _} =
+        EventStore.append_to_stream(
+          pid,
+          stream1,
+          [
+            %OrderPlaced{order_id: "1", customer_id: "c1", items: [], total: 10.0}
+          ],
+          []
+        )
+
+      {:ok, _} =
+        EventStore.append_to_stream(
+          pid,
+          stream2,
+          [
+            %OrderShipped{order_id: "2", tracking_number: "T1", carrier: "FedEx"}
+          ],
+          []
+        )
+
+      {:ok, _} = EventStore.append_to_stream(pid, stream3, [%CounterIncremented{amount: 5}], [])
+
+      {:ok, result} = EventStore.read_all_events(pid, [])
+
+      # Should include events from all 3 streams
+      stream_names = Enum.map(result.events, & &1.stream_name)
+      assert stream1 in stream_names
+      assert stream2 in stream_names
+      assert stream3 in stream_names
+      assert result.total == 3
+
+      GenServer.stop(pid)
+    end
+
+    test "returns events in chronological order by log_position" do
+      # Use a fresh EventStore to avoid interference from parallel tests
+      {:ok, pid} = EventStore.start_link(name: :chrono_order_test)
+
+      stream_a = unique_stream_name("chrono-a")
+      stream_b = unique_stream_name("chrono-b")
+
+      {:ok, _} = EventStore.append_to_stream(pid, stream_a, [%CounterIncremented{amount: 1}], [])
+      {:ok, _} = EventStore.append_to_stream(pid, stream_b, [%CounterIncremented{amount: 2}], [])
+      {:ok, _} = EventStore.append_to_stream(pid, stream_a, [%CounterIncremented{amount: 3}], [])
+
+      {:ok, result} = EventStore.read_all_events(pid, [])
+
+      amounts = Enum.map(result.events, & &1.event.amount)
+      assert amounts == [1, 2, 3]
+
+      GenServer.stop(pid)
+    end
+
+    test "pagination works correctly" do
+      # Create 25 events in unique streams
+      type = "pagination-test-#{System.unique_integer([:positive])}"
+
+      for i <- 1..25 do
+        stream = "#{type}-#{i}"
+        {:ok, _} = EventStore.append_to_stream(stream, [%CounterIncremented{amount: i}])
+      end
+
+      {:ok, page1} = EventStore.read_all_events(page: 1, page_size: 10)
+      {:ok, page2} = EventStore.read_all_events(page: 2, page_size: 10)
+      {:ok, page3} = EventStore.read_all_events(page: 3, page_size: 10)
+
+      assert length(page1.events) == 10
+      assert page1.has_more == true
+
+      assert length(page2.events) == 10
+      assert page2.has_more == true
+
+      # Page 3 depends on total events in store, but should have at least 5
+      assert length(page3.events) >= 5
+    end
+
+    test "returns empty result for empty store" do
+      # Start a fresh EventStore instance
+      {:ok, pid} = EventStore.start_link(name: :empty_store_test)
+
+      {:ok, result} = EventStore.read_all_events(pid, [])
+
+      assert result.events == []
+      assert result.has_more == false
+      assert result.total == 0
+
+      GenServer.stop(pid)
+    end
+  end
+
+  describe "PubSub all_events topic" do
+    test "broadcasts to all_events on any append" do
+      Phoenix.PubSub.subscribe(Epoch.PubSub, "all_events")
+
+      stream = unique_stream_name("pubsub-all")
+      {:ok, _} = EventStore.append_to_stream(stream, [%CounterIncremented{amount: 42}])
+
+      assert_receive {:events_appended, ^stream, events}
+      assert length(events) == 1
+      assert hd(events).event.amount == 42
+    end
+  end
+
   # Use unique stream names per test to avoid interference
   defp unique_stream_name(base \\ "test-stream") do
     "#{base}-#{System.unique_integer([:positive])}"

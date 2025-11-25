@@ -466,6 +466,7 @@ And **never** do this:
 - PostgreSQL via Ecto (for future persistence); In-memory EventStore for cart sessions (002-product-index-liveview)
 - Elixir ~> 1.15 / OTP 28 + Phoenix 1.8.1, Phoenix LiveView 1.1.17, Phoenix PubSub 2.1 (003-stream-type-filter)
 - In-memory EventStore (GenServer-based, Feature 001) (003-stream-type-filter)
+- Elixir ~> 1.15 (using 1.19.2) / OTP 28 + Phoenix 1.8.1, Phoenix LiveView 1.1.17, Phoenix PubSub 2.1 (004-default-event-list)
 
 ## Recent Changes
 - 001-elixir-event-store: Added Elixir ~> 1.15 + None (pure Elixir/OTP implementation)

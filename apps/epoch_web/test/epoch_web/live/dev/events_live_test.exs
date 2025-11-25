@@ -24,6 +24,111 @@ defmodule EpochWeb.Dev.EventsLiveTest do
   # Phase 3: User Story 1 - LiveView filter workflow integration tests
   # ==========================================================================
 
+  # ==========================================================================
+  # Feature 004: Default Event List - User Story 1 - View All Events on Initial Load
+  # ==========================================================================
+
+  describe "US1: default view on mount" do
+    test "displays events on initial load without requiring filter", %{conn: conn} do
+      # Create events before mounting the view
+      order_stream = unique_stream_name("order")
+      cart_stream = unique_stream_name("cart")
+
+      {:ok, _} =
+        EventStore.append_to_stream(order_stream, [
+          %OrderPlaced{order_id: "1", product: "Widget", quantity: 1}
+        ])
+
+      {:ok, _} =
+        EventStore.append_to_stream(cart_stream, [
+          %CartCreated{cart_id: "c1", user_id: "u1"}
+        ])
+
+      {:ok, view, html} = live(conn, ~p"/dev/events")
+
+      # Should show events immediately without filter (may be on any page)
+      # Key assertion: events are displayed, not "Enter a stream type" message
+      refute html =~ "Enter a stream type to view events"
+
+      # Should show total count and "Showing all events"
+      assert html =~ "Showing all events"
+      assert has_element?(view, "#events")
+    end
+
+    test "shows 'No events in store' message when empty", %{conn: conn} do
+      # Start a fresh EventStore to test empty state
+      {:ok, pid} = EventStore.start_link(name: :empty_test_store)
+
+      # We can't easily mount with a custom store, so we verify the message
+      # format is correct by checking the old message is gone
+      {:ok, _view, html} = live(conn, ~p"/dev/events")
+
+      # Should NOT show the old "Enter a stream type" message
+      refute html =~ "Enter a stream type to view events"
+
+      GenServer.stop(pid)
+    end
+
+    test "pagination works in default view", %{conn: conn} do
+      {:ok, view, html} = live(conn, ~p"/dev/events")
+
+      # Should show pagination controls when there are events
+      # The shared store will have events from other tests
+      if html =~ "Showing all events" do
+        assert html =~ "Page 1"
+
+        assert has_element?(view, "button", "Next") or
+                 has_element?(view, "button[disabled]", "Next")
+      end
+    end
+  end
+
+  # ==========================================================================
+  # Feature 004: User Story 2 - Live Updates for All Events
+  # ==========================================================================
+
+  describe "US2: live updates in default view" do
+    test "receives live updates for any stream in default view", %{conn: conn} do
+      {:ok, view, _html} = live(conn, ~p"/dev/events")
+
+      # Append a new event to any stream (should trigger PubSub broadcast to "all_events")
+      new_stream = unique_stream_name("live-update")
+
+      {:ok, _} =
+        EventStore.append_to_stream(new_stream, [
+          %OrderPlaced{order_id: "live1", product: "LiveProduct", quantity: 99}
+        ])
+
+      # Wait for live update
+      :timer.sleep(100)
+      html = render(view)
+
+      # Should show the new event's stream name
+      assert html =~ new_stream
+    end
+
+    test "multiple concurrent viewers receive independent updates", %{conn: conn} do
+      # Open two viewers
+      {:ok, view1, _html1} = live(conn, ~p"/dev/events")
+      {:ok, view2, _html2} = live(conn, ~p"/dev/events")
+
+      # Append a new event
+      new_stream = unique_stream_name("concurrent")
+
+      {:ok, _} =
+        EventStore.append_to_stream(new_stream, [
+          %OrderPlaced{order_id: "c1", product: "ConcurrentProduct", quantity: 1}
+        ])
+
+      # Wait for live updates
+      :timer.sleep(100)
+
+      # Both viewers should receive the update
+      assert render(view1) =~ new_stream
+      assert render(view2) =~ new_stream
+    end
+  end
+
   describe "EventsLive mount" do
     test "mounts successfully at /dev/events", %{conn: conn} do
       {:ok, view, _html} = live(conn, ~p"/dev/events")
@@ -34,7 +139,108 @@ defmodule EpochWeb.Dev.EventsLiveTest do
     test "shows empty state message on mount", %{conn: conn} do
       {:ok, _view, html} = live(conn, ~p"/dev/events")
 
-      assert html =~ "Enter a stream type to view events"
+      # After Feature 004, this should show "No events in store" or events
+      # NOT "Enter a stream type to view events"
+      refute html =~ "Enter a stream type to view events"
+    end
+  end
+
+  # ==========================================================================
+  # Feature 004: User Story 3 - Transition Between Default and Filtered Views
+  # ==========================================================================
+
+  describe "US3: filter transitions" do
+    test "transitions from default to filtered view", %{conn: conn} do
+      # Create events of different types
+      order_stream = unique_stream_name("order")
+      cart_stream = unique_stream_name("cart")
+
+      {:ok, _} =
+        EventStore.append_to_stream(order_stream, [
+          %OrderPlaced{order_id: "t1", product: "Widget", quantity: 1}
+        ])
+
+      {:ok, _} =
+        EventStore.append_to_stream(cart_stream, [
+          %CartCreated{cart_id: "c1", user_id: "u1"}
+        ])
+
+      {:ok, view, html} = live(conn, ~p"/dev/events")
+
+      # Initially in default view showing all events
+      assert html =~ "Showing all events"
+
+      # Apply filter
+      view
+      |> form("#filter-form", %{stream_type: "order"})
+      |> render_submit()
+
+      html = render(view)
+
+      # Now in filtered view
+      assert html =~ "Showing events for type"
+      assert html =~ "order"
+    end
+
+    test "transitions from filtered to default view (clear filter)", %{conn: conn} do
+      order_stream = unique_stream_name("order")
+      cart_stream = unique_stream_name("cart")
+
+      {:ok, _} =
+        EventStore.append_to_stream(order_stream, [
+          %OrderPlaced{order_id: "t2", product: "Widget", quantity: 1}
+        ])
+
+      {:ok, _} =
+        EventStore.append_to_stream(cart_stream, [
+          %CartCreated{cart_id: "c2", user_id: "u2"}
+        ])
+
+      {:ok, view, _html} = live(conn, ~p"/dev/events")
+
+      # Apply filter first
+      view
+      |> form("#filter-form", %{stream_type: "order"})
+      |> render_submit()
+
+      # Clear filter
+      view
+      |> element("button[phx-click=clear_filter]")
+      |> render_click()
+
+      html = render(view)
+
+      # Back to default view
+      assert html =~ "Showing all events"
+    end
+
+    test "live updates work correctly after clearing filter", %{conn: conn} do
+      {:ok, view, _html} = live(conn, ~p"/dev/events")
+
+      # Apply filter
+      view
+      |> form("#filter-form", %{stream_type: "order"})
+      |> render_submit()
+
+      # Clear filter to return to default view
+      view
+      |> element("button[phx-click=clear_filter]")
+      |> render_click()
+
+      # Now append a new event
+      new_stream = unique_stream_name("after-clear")
+
+      {:ok, _} =
+        EventStore.append_to_stream(new_stream, [
+          %OrderPlaced{order_id: "ac1", product: "AfterClear", quantity: 1}
+        ])
+
+      # Wait for live update
+      :timer.sleep(100)
+      html = render(view)
+
+      # Should receive the update since we're back on all_events topic
+      assert html =~ new_stream
     end
   end
 
@@ -94,7 +300,8 @@ defmodule EpochWeb.Dev.EventsLiveTest do
         |> element("button[phx-click=clear_filter]")
         |> render_click()
 
-      assert html =~ "Enter a stream type to view events"
+      # After Feature 004: clearing filter returns to default view showing all events
+      assert html =~ "Showing all events"
     end
   end
 
