@@ -41,6 +41,7 @@ defmodule EpochWeb.Router do
 
       live_dashboard "/dashboard", metrics: EpochWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
+      live "/events", EpochWeb.Dev.EventsLive
     end
   end
 end

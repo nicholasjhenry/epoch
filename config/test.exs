@@ -21,6 +21,9 @@ config :epoch_web, EpochWeb.Endpoint,
   secret_key_base: "OpsxEx0BeXV/wdV1QHo7uNDnuidf+yc4L7OYtmzHEK9pcukDzEwCHlxG7TuljwcY",
   server: false
 
+# Enable dev routes in test for testing /dev/* routes
+config :epoch_web, :dev_routes, true
+
 # Print only warnings and errors during test
 config :logger, level: :warning
 

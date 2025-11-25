@@ -226,6 +226,121 @@ defmodule Epoch.EventStore do
     GenServer.call(server, :debug_all_streams)
   end
 
+  @doc """
+  Extracts the stream type from a stream name.
+
+  The stream type is the portion of the stream name before the first hyphen.
+  If no hyphen is present, the full stream name is returned as the type.
+
+  ## Examples
+
+      iex> EventStore.extract_stream_type("order-123")
+      "order"
+
+      iex> EventStore.extract_stream_type("order-456-item")
+      "order"
+
+      iex> EventStore.extract_stream_type("payment")
+      "payment"
+
+      iex> EventStore.extract_stream_type("")
+      ""
+
+  """
+  @spec extract_stream_type(String.t()) :: String.t()
+  def extract_stream_type(stream_name) do
+    case String.split(stream_name, "-", parts: 2) do
+      [type, _rest] -> type
+      [full_name] -> full_name
+    end
+  end
+
+  @typedoc """
+  An event combined with its source stream name for cross-stream queries.
+  """
+  @type event_with_stream :: %{
+          event: term(),
+          stream_name: String.t(),
+          metadata: map()
+        }
+
+  @typedoc """
+  Result structure for stream type queries with pagination info.
+  """
+  @type filtered_events_result :: %{
+          events: [event_with_stream()],
+          has_more: boolean(),
+          total: non_neg_integer()
+        }
+
+  @doc """
+  Reads events from all streams matching the given stream type.
+
+  The stream type is matched by prefix - for example, type "order" matches
+  streams "order-123", "order-456", etc.
+
+  ## Options
+
+    * `:page` - Page number (1-indexed). Defaults to 1.
+    * `:page_size` - Number of events per page. Defaults to 20. Max 100.
+
+  ## Returns
+
+    * `{:ok, %{events: [...], has_more: boolean(), total: integer()}}` on success
+    * `{:error, reason}` on validation failure
+
+  ## Examples
+
+      {:ok, result} = EventStore.read_by_stream_type("order")
+      # => {:ok, %{events: [...], has_more: false, total: 5}}
+
+      {:ok, result} = EventStore.read_by_stream_type("order", page: 2, page_size: 10)
+
+  """
+  @spec read_by_stream_type(String.t(), keyword()) ::
+          {:ok, filtered_events_result()} | {:error, String.t()}
+  def read_by_stream_type(stream_type, opts \\ []) do
+    read_by_stream_type(__MODULE__, stream_type, opts)
+  end
+
+  @doc """
+  Reads events by stream type from a specific EventStore instance.
+  """
+  @spec read_by_stream_type(GenServer.server(), String.t(), keyword()) ::
+          {:ok, filtered_events_result()} | {:error, String.t()}
+  def read_by_stream_type(server, stream_type, opts) do
+    with :ok <- validate_stream_type(stream_type),
+         :ok <- validate_pagination_opts(opts) do
+      page = Keyword.get(opts, :page, 1)
+      page_size = Keyword.get(opts, :page_size, 20)
+      GenServer.call(server, {:read_by_stream_type, stream_type, page, page_size})
+    end
+  end
+
+  defp validate_stream_type(stream_type) do
+    if is_binary(stream_type) and String.trim(stream_type) != "" do
+      :ok
+    else
+      {:error, "Stream type is required"}
+    end
+  end
+
+  defp validate_pagination_opts(opts) do
+    page = Keyword.get(opts, :page, 1)
+    page_size = Keyword.get(opts, :page_size, 20)
+
+    cond do
+      page < 1 ->
+        {:error, "Page must be at least 1"}
+
+      page_size < 1 or page_size > 100 ->
+        {:error, "Page size must be between 1 and 100"}
+
+      true ->
+        :ok
+    end
+  end
+
   # Server Callbacks
 
   @impl true
@@ -265,6 +380,38 @@ defmodule Epoch.EventStore do
     stream = Map.get(state.streams, stream_name, %{events: [], version: 0})
     events = extract_events(stream.events, from, to, max_count)
     {:reply, {:ok, %{events: events, version: stream.version}}, state}
+  end
+
+  @impl true
+  def handle_call({:read_by_stream_type, stream_type, page, page_size}, _from, state) do
+    # Collect events from all matching streams
+    matching_events =
+      state.streams
+      |> Enum.filter(fn {stream_name, _stream} ->
+        extract_stream_type(stream_name) == stream_type
+      end)
+      |> Enum.flat_map(fn {stream_name, stream} ->
+        Enum.map(stream.events, fn envelope ->
+          %{
+            event: envelope.event,
+            stream_name: stream_name,
+            metadata: envelope.metadata
+          }
+        end)
+      end)
+      |> Enum.sort_by(& &1.metadata.log_position)
+
+    total = length(matching_events)
+    offset = (page - 1) * page_size
+
+    events =
+      matching_events
+      |> Enum.drop(offset)
+      |> Enum.take(page_size)
+
+    has_more = offset + page_size < total
+
+    {:reply, {:ok, %{events: events, has_more: has_more, total: total}}, state}
   end
 
   @impl true
@@ -397,7 +544,21 @@ defmodule Epoch.EventStore do
     # Notify subscriptions
     notify_subscriptions(new_state, stream_name, new_stream.version, events)
 
+    # Broadcast to stream type topic for live updates (with envelopes for metadata)
+    broadcast_to_stream_type(stream_name, envelopes)
+
     {new_state, new_stream.version}
+  end
+
+  defp broadcast_to_stream_type(stream_name, events) do
+    stream_type = extract_stream_type(stream_name)
+    topic = "stream_type:#{stream_type}"
+
+    Phoenix.PubSub.broadcast(
+      Epoch.PubSub,
+      topic,
+      {:events_appended, stream_name, events}
+    )
   end
 
   defp extract_events(envelopes, from, to, max_count) do
