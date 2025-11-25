@@ -24,9 +24,9 @@
 
 **Purpose**: CDN dependencies and routing setup
 
-- [ ] T001 Add Bulma CSS CDN link to `apps/epoch_web/lib/epoch_web/components/layouts/root.html.heex`
-- [ ] T002 [P] Add Font Awesome CDN link to `apps/epoch_web/lib/epoch_web/components/layouts/root.html.heex`
-- [ ] T003 Add `/products` LiveView route to `apps/epoch_web/lib/epoch_web/router.ex`
+- [X] T001 Add Bulma CSS CDN link to `apps/epoch_web/lib/epoch_web/components/layouts/root.html.heex`
+- [X] T002 [P] Add Font Awesome CDN link to `apps/epoch_web/lib/epoch_web/components/layouts/root.html.heex`
+- [X] T003 Add `/products` LiveView route to `apps/epoch_web/lib/epoch_web/router.ex`
 
 ---
 
@@ -38,17 +38,17 @@
 
 ### Tests for Foundation (MANDATORY - write these first) ⚠️
 
-- [ ] T004 [P] Write Catalog context tests in `apps/epoch/test/epoch/catalog_test.exs`
-- [ ] T005 [P] Write Cart context tests in `apps/epoch/test/epoch/cart_test.exs`
+- [X] T004 [P] Write Catalog context tests in `apps/epoch/test/epoch/catalog_test.exs`
+- [X] T005 [P] Write Cart context tests in `apps/epoch/test/epoch/cart_test.exs`
 
 ### Implementation for Foundation
 
-- [ ] T006 [P] Create Product struct in `apps/epoch/lib/epoch/catalog/product.ex`
-- [ ] T007 [P] Create CartCreated event struct in `apps/epoch/lib/epoch/cart/events/cart_created.ex`
-- [ ] T008 [P] Create ItemAddedToCart event struct in `apps/epoch/lib/epoch/cart/events/item_added_to_cart.ex`
-- [ ] T009 Create CartSession struct with evolve/2 in `apps/epoch/lib/epoch/cart/cart_session.ex` (depends on T007, T008)
-- [ ] T010 Create Catalog context with list_products/0, get_product/1, get_product!/1 in `apps/epoch/lib/epoch/catalog/catalog.ex` (depends on T006)
-- [ ] T011 Create Cart context with create_session/1, add_item/3, get_session/1 in `apps/epoch/lib/epoch/cart/cart.ex` (depends on T009, T010)
+- [X] T006 [P] Create Product struct in `apps/epoch/lib/epoch/catalog/product.ex`
+- [X] T007 [P] Create CartCreated event struct in `apps/epoch/lib/epoch/cart/events/cart_created.ex`
+- [X] T008 [P] Create ItemAddedToCart event struct in `apps/epoch/lib/epoch/cart/events/item_added_to_cart.ex`
+- [X] T009 Create CartSession struct with evolve/2 in `apps/epoch/lib/epoch/cart/cart_session.ex` (depends on T007, T008)
+- [X] T010 Create Catalog context with list_products/0, get_product/1, get_product!/1 in `apps/epoch/lib/epoch/catalog/catalog.ex` (depends on T006)
+- [X] T011 Create Cart context with create_session/1, add_item/3, get_session/1 in `apps/epoch/lib/epoch/cart/cart.ex` (depends on T009, T010)
 
 **Checkpoint**: Foundation ready - all tests pass, user story implementation can begin
 
@@ -62,14 +62,14 @@
 
 ### Tests for User Story 1 (MANDATORY - write these first) ⚠️
 
-- [ ] T012 [US1] Write LiveView mount tests in `apps/epoch_web/test/epoch_web/live/products_live_test.exs` (test assigns products list, test generates cart session id)
-- [ ] T013 [US1] Write product card rendering tests in `apps/epoch_web/test/epoch_web/live/products_live_test.exs` (test renders all 5 products, test renders product name/price/description elements with correct IDs)
+- [X] T012 [US1] Write LiveView mount tests in `apps/epoch_web/test/epoch_web/live/products_live_test.exs` (test assigns products list, test generates cart session id)
+- [X] T013 [US1] Write product card rendering tests in `apps/epoch_web/test/epoch_web/live/products_live_test.exs` (test renders all 5 products, test renders product name/price/description elements with correct IDs)
 
 ### Implementation for User Story 1
 
-- [ ] T014 [US1] Create ProductsLive module with mount/3 in `apps/epoch_web/lib/epoch_web/live/products_live.ex`
-- [ ] T015 [US1] Create ProductsLive template with product cards in `apps/epoch_web/lib/epoch_web/live/products_live.html.heex`
-- [ ] T016 [US1] Add format_price/1 helper function to ProductsLive module in `apps/epoch_web/lib/epoch_web/live/products_live.ex`
+- [X] T014 [US1] Create ProductsLive module with mount/3 in `apps/epoch_web/lib/epoch_web/live/products_live.ex`
+- [X] T015 [US1] Create ProductsLive template with product cards in `apps/epoch_web/lib/epoch_web/live/products_live.html.heex`
+- [X] T016 [US1] Add format_price/1 helper function to ProductsLive module in `apps/epoch_web/lib/epoch_web/live/products_live.ex`
 
 **Checkpoint**: User Story 1 complete - products display in responsive grid, tests pass
 
@@ -83,11 +83,11 @@
 
 ### Tests for User Story 2 (MANDATORY - write these first) ⚠️
 
-- [ ] T017 [US2] Write navigation rendering tests in `apps/epoch_web/test/epoch_web/live/products_live_test.exs` (test nav-main exists, test nav-products/nav-cart/nav-spec/nav-backoffice links exist with icons)
+- [X] T017 [US2] Write navigation rendering tests in `apps/epoch_web/test/epoch_web/live/products_live_test.exs` (test nav-main exists, test nav-products/nav-cart/nav-spec/nav-backoffice links exist with icons)
 
 ### Implementation for User Story 2
 
-- [ ] T018 [US2] Add navigation bar HTML to ProductsLive template in `apps/epoch_web/lib/epoch_web/live/products_live.html.heex`
+- [X] T018 [US2] Add navigation bar HTML to ProductsLive template in `apps/epoch_web/lib/epoch_web/live/products_live.html.heex`
 
 **Checkpoint**: User Story 2 complete - navigation bar displays with all links and icons, tests pass
 
@@ -101,13 +101,13 @@
 
 ### Tests for User Story 3 (MANDATORY - write these first) ⚠️
 
-- [ ] T019 [US3] Write add_to_cart button rendering tests in `apps/epoch_web/test/epoch_web/live/products_live_test.exs` (test add-item-{product_id} button exists on each card)
-- [ ] T020 [US3] Write add_to_cart event handler tests in `apps/epoch_web/test/epoch_web/live/products_live_test.exs` (test clicking add button redirects to /cart, test event stored in EventStore)
+- [X] T019 [US3] Write add_to_cart button rendering tests in `apps/epoch_web/test/epoch_web/live/products_live_test.exs` (test add-item-{product_id} button exists on each card)
+- [X] T020 [US3] Write add_to_cart event handler tests in `apps/epoch_web/test/epoch_web/live/products_live_test.exs` (test clicking add button redirects to /cart, test event stored in EventStore)
 
 ### Implementation for User Story 3
 
-- [ ] T021 [US3] Add handle_event("add_to_cart", ...) to ProductsLive in `apps/epoch_web/lib/epoch_web/live/products_live.ex`
-- [ ] T022 [US3] Add "Add Item" button with phx-click to product cards in `apps/epoch_web/lib/epoch_web/live/products_live.html.heex`
+- [X] T021 [US3] Add handle_event("add_to_cart", ...) to ProductsLive in `apps/epoch_web/lib/epoch_web/live/products_live.ex`
+- [X] T022 [US3] Add "Add Item" button with phx-click to product cards in `apps/epoch_web/lib/epoch_web/live/products_live.html.heex`
 
 **Checkpoint**: User Story 3 complete - add to cart works, redirects to /cart, event stored, tests pass
 
@@ -117,9 +117,9 @@
 
 **Purpose**: Final validation and cleanup
 
-- [ ] T023 Run full test suite with `mix test`
-- [ ] T024 Run precommit checks with `mix precommit` (format, credo, dialyzer)
-- [ ] T025 Manual verification per quickstart.md checklist
+- [X] T023 Run full test suite with `mix test`
+- [X] T024 Run precommit checks with `mix precommit` (format, credo, dialyzer)
+- [X] T025 Manual verification per quickstart.md checklist
 
 ---
 

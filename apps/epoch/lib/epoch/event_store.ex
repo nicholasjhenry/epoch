@@ -68,7 +68,7 @@ defmodule Epoch.EventStore do
 
   """
   @spec append_to_stream(stream_name(), [event()], keyword()) ::
-          {:ok, %{next_expected_version: version()}}
+          {:ok, %{next_expected_version: version()}} | {:error, term()}
   def append_to_stream(stream_name, events, opts \\ []) do
     append_to_stream(__MODULE__, stream_name, events, opts)
   end
@@ -77,7 +77,7 @@ defmodule Epoch.EventStore do
   Appends events to a stream on a specific EventStore instance.
   """
   @spec append_to_stream(GenServer.server(), stream_name(), [event()], keyword()) ::
-          {:ok, %{next_expected_version: version()}}
+          {:ok, %{next_expected_version: version()}} | {:error, term()}
   def append_to_stream(server, stream_name, events, opts) do
     validate_stream_name!(stream_name)
     expected_version = Keyword.get(opts, :expected_version)
