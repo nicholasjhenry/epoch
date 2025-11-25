@@ -24,11 +24,11 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create directory structure: `apps/epoch/lib/epoch/event_store/` and `apps/epoch/test/epoch/event_store/`
-- [ ] T002 [P] Create error type module in `apps/epoch/lib/epoch/event_store/version_mismatch_error.ex`
-- [ ] T003 [P] Create EventMetadata struct in `apps/epoch/lib/epoch/event_store/event_metadata.ex`
-- [ ] T004 [P] Create EventEnvelope struct in `apps/epoch/lib/epoch/event_store/event_envelope.ex`
-- [ ] T005 [P] Create test events module in `apps/epoch/test/epoch/event_store/support/test_events.ex`
+- [x] T001 Create directory structure: `apps/epoch/lib/epoch/event_store/` and `apps/epoch/test/epoch/event_store/`
+- [x] T002 [P] Create error type module in `apps/epoch/lib/epoch/event_store/version_mismatch_error.ex`
+- [x] T003 [P] Create EventMetadata struct in `apps/epoch/lib/epoch/event_store/event_metadata.ex`
+- [x] T004 [P] Create EventEnvelope struct in `apps/epoch/lib/epoch/event_store/event_envelope.ex`
+- [x] T005 [P] Create test events module in `apps/epoch/test/epoch/event_store/support/test_events.ex`
 
 ---
 
@@ -38,11 +38,11 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T006 Create GenServer skeleton with state structure in `apps/epoch/lib/epoch/event_store.ex`
-- [ ] T007 Implement `start_link/1` and `init/1` callbacks in `apps/epoch/lib/epoch/event_store.ex`
-- [ ] T008 Implement UUID generation helper function in `apps/epoch/lib/epoch/event_store.ex`
-- [ ] T009 Add EventStore to application supervision tree in `apps/epoch/lib/epoch/application.ex`
-- [ ] T010 [P] Create basic GenServer startup test in `apps/epoch/test/epoch/event_store_test.exs`
+- [x] T006 Create GenServer skeleton with state structure in `apps/epoch/lib/epoch/event_store.ex`
+- [x] T007 Implement `start_link/1` and `init/1` callbacks in `apps/epoch/lib/epoch/event_store.ex`
+- [x] T008 Implement UUID generation helper function in `apps/epoch/lib/epoch/event_store.ex`
+- [x] T009 Add EventStore to application supervision tree in `apps/epoch/lib/epoch/application.ex`
+- [x] T010 [P] Create basic GenServer startup test in `apps/epoch/test/epoch/event_store_test.exs`
 
 **Checkpoint**: Foundation ready - user story implementation can now begin
 
@@ -58,22 +58,22 @@
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T011 [P] [US1] Test appending single event to new stream creates stream with version 1 in `apps/epoch/test/epoch/event_store_test.exs`
-- [ ] T012 [P] [US1] Test appending multiple events atomically increments version by count in `apps/epoch/test/epoch/event_store_test.exs`
-- [ ] T013 [P] [US1] Test reading from non-existent stream returns appropriate indicator in `apps/epoch/test/epoch/event_store_test.exs`
-- [ ] T014 [P] [US1] Test reading from stream returns events in append order in `apps/epoch/test/epoch/event_store_test.exs`
-- [ ] T015 [P] [US1] Test event IDs are unique across multiple appends and streams in `apps/epoch/test/epoch/event_store_test.exs`
-- [ ] T016 [P] [US1] Test stream position metadata starts at 1 and increments sequentially in `apps/epoch/test/epoch/event_store_test.exs`
-- [ ] T017 [P] [US1] Test global log position increases monotonically across all streams in `apps/epoch/test/epoch/event_store_test.exs`
-- [ ] T018 [P] [US1] Test appending zero events is no-op and returns current version in `apps/epoch/test/epoch/event_store_test.exs`
+- [x] T011 [P] [US1] Test appending single event to new stream creates stream with version 1 in `apps/epoch/test/epoch/event_store_test.exs`
+- [x] T012 [P] [US1] Test appending multiple events atomically increments version by count in `apps/epoch/test/epoch/event_store_test.exs`
+- [x] T013 [P] [US1] Test reading from non-existent stream returns appropriate indicator in `apps/epoch/test/epoch/event_store_test.exs`
+- [x] T014 [P] [US1] Test reading from stream returns events in append order in `apps/epoch/test/epoch/event_store_test.exs`
+- [x] T015 [P] [US1] Test event IDs are unique across multiple appends and streams in `apps/epoch/test/epoch/event_store_test.exs`
+- [x] T016 [P] [US1] Test stream position metadata starts at 1 and increments sequentially in `apps/epoch/test/epoch/event_store_test.exs`
+- [x] T017 [P] [US1] Test global log position increases monotonically across all streams in `apps/epoch/test/epoch/event_store_test.exs`
+- [x] T018 [P] [US1] Test appending zero events is no-op and returns current version in `apps/epoch/test/epoch/event_store_test.exs`
 
 ### Implementation for User Story 1
 
-- [ ] T019 [US1] Implement `handle_call(:append_to_stream, ...)` for basic append without version check in `apps/epoch/lib/epoch/event_store.ex`
-- [ ] T020 [US1] Implement EventEnvelope creation with metadata generation in `apps/epoch/lib/epoch/event_store.ex`
-- [ ] T021 [US1] Implement `handle_call(:read_stream, ...)` for basic stream reading in `apps/epoch/lib/epoch/event_store.ex`
-- [ ] T022 [US1] Implement public API functions `append_to_stream/3` and `read_stream/2` in `apps/epoch/lib/epoch/event_store.ex`
-- [ ] T023 [US1] Add logging for append operations in `apps/epoch/lib/epoch/event_store.ex`
+- [x] T019 [US1] Implement `handle_call(:append_to_stream, ...)` for basic append without version check in `apps/epoch/lib/epoch/event_store.ex`
+- [x] T020 [US1] Implement EventEnvelope creation with metadata generation in `apps/epoch/lib/epoch/event_store.ex`
+- [x] T021 [US1] Implement `handle_call(:read_stream, ...)` for basic stream reading in `apps/epoch/lib/epoch/event_store.ex`
+- [x] T022 [US1] Implement public API functions `append_to_stream/3` and `read_stream/2` in `apps/epoch/lib/epoch/event_store.ex`
+- [x] T023 [US1] Add logging for append operations in `apps/epoch/lib/epoch/event_store.ex`
 
 **Checkpoint**: User Story 1 should be fully functional and testable independently - can append and read events
 
@@ -87,17 +87,17 @@
 
 ### Tests for User Story 2 (MANDATORY - write these first) ⚠️
 
-- [ ] T024 [P] [US2] Test appending with matching expected version succeeds in `apps/epoch/test/epoch/event_store_test.exs`
-- [ ] T025 [P] [US2] Test appending with mismatched expected version raises VersionMismatchError in `apps/epoch/test/epoch/event_store_test.exs`
-- [ ] T026 [P] [US2] Test appending without expected version always succeeds regardless of current version in `apps/epoch/test/epoch/event_store_test.exs`
-- [ ] T027 [P] [US2] Test appending with expected_version: 0 succeeds on new/empty stream in `apps/epoch/test/epoch/event_store_test.exs`
-- [ ] T028 [P] [US2] Integration test: concurrent appends to same stream with version checking (one succeeds) in `apps/epoch/test/epoch/event_store/concurrency_test.exs`
+- [x] T024 [P] [US2] Test appending with matching expected version succeeds in `apps/epoch/test/epoch/event_store_test.exs`
+- [x] T025 [P] [US2] Test appending with mismatched expected version raises VersionMismatchError in `apps/epoch/test/epoch/event_store_test.exs`
+- [x] T026 [P] [US2] Test appending without expected version always succeeds regardless of current version in `apps/epoch/test/epoch/event_store_test.exs`
+- [x] T027 [P] [US2] Test appending with expected_version: 0 succeeds on new/empty stream in `apps/epoch/test/epoch/event_store_test.exs`
+- [x] T028 [P] [US2] Integration test: concurrent appends to same stream with version checking (one succeeds) in `apps/epoch/test/epoch/event_store/concurrency_test.exs`
 
 ### Implementation for User Story 2
 
-- [ ] T029 [US2] Add expected_version validation logic to append handler in `apps/epoch/lib/epoch/event_store.ex`
-- [ ] T030 [US2] Implement version mismatch error raising with context in `apps/epoch/lib/epoch/event_store.ex`
-- [ ] T031 [US2] Add logging for version mismatch errors in `apps/epoch/lib/epoch/event_store.ex`
+- [x] T029 [US2] Add expected_version validation logic to append handler in `apps/epoch/lib/epoch/event_store.ex`
+- [x] T030 [US2] Implement version mismatch error raising with context in `apps/epoch/lib/epoch/event_store.ex`
+- [x] T031 [US2] Add logging for version mismatch errors in `apps/epoch/lib/epoch/event_store.ex`
 
 **Checkpoint**: User Story 2 complete - optimistic concurrency control works independently
 
@@ -111,17 +111,17 @@
 
 ### Tests for User Story 3 (MANDATORY - write these first) ⚠️
 
-- [ ] T032 [P] [US3] Test paginated reading with from/to parameters returns correct subset in `apps/epoch/test/epoch/event_store_test.exs`
-- [ ] T033 [P] [US3] Test paginated reading with from/max_count returns correct subset in `apps/epoch/test/epoch/event_store_test.exs`
-- [ ] T034 [P] [US3] Test reading beyond stream length returns empty or partial results in `apps/epoch/test/epoch/event_store_test.exs`
-- [ ] T035 [P] [US3] Test invalid pagination parameters raise ArgumentError in `apps/epoch/test/epoch/event_store_test.exs`
-- [ ] T036 [P] [US3] Test reading with no pagination parameters returns all events in `apps/epoch/test/epoch/event_store_test.exs`
+- [x] T032 [P] [US3] Test paginated reading with from/to parameters returns correct subset in `apps/epoch/test/epoch/event_store_test.exs`
+- [x] T033 [P] [US3] Test paginated reading with from/max_count returns correct subset in `apps/epoch/test/epoch/event_store_test.exs`
+- [x] T034 [P] [US3] Test reading beyond stream length returns empty or partial results in `apps/epoch/test/epoch/event_store_test.exs`
+- [x] T035 [P] [US3] Test invalid pagination parameters raise ArgumentError in `apps/epoch/test/epoch/event_store_test.exs`
+- [x] T036 [P] [US3] Test reading with no pagination parameters returns all events in `apps/epoch/test/epoch/event_store_test.exs`
 
 ### Implementation for User Story 3
 
-- [ ] T037 [US3] Implement pagination parameter parsing (from, to, max_count) in `apps/epoch/lib/epoch/event_store.ex`
-- [ ] T038 [US3] Implement pagination validation (negative from, to < from, etc.) in `apps/epoch/lib/epoch/event_store.ex`
-- [ ] T039 [US3] Update read_stream handler to apply pagination via Enum.slice in `apps/epoch/lib/epoch/event_store.ex`
+- [x] T037 [US3] Implement pagination parameter parsing (from, to, max_count) in `apps/epoch/lib/epoch/event_store.ex`
+- [x] T038 [US3] Implement pagination validation (negative from, to < from, etc.) in `apps/epoch/lib/epoch/event_store.ex`
+- [x] T039 [US3] Update read_stream handler to apply pagination via Enum.slice in `apps/epoch/lib/epoch/event_store.ex`
 
 **Checkpoint**: User Story 3 complete - paginated reading works independently
 
@@ -135,15 +135,15 @@
 
 ### Tests for User Story 4 (MANDATORY - write these first) ⚠️
 
-- [ ] T040 [P] [US4] Test aggregating stream with evolve function produces correct final state in `apps/epoch/test/epoch/event_store_test.exs`
-- [ ] T041 [P] [US4] Test aggregating empty stream returns initial state in `apps/epoch/test/epoch/event_store_test.exs`
-- [ ] T042 [P] [US4] Test aggregating with pagination applies evolve only to requested events in `apps/epoch/test/epoch/event_store_test.exs`
-- [ ] T043 [P] [US4] Test aggregate result includes both final state and current version in `apps/epoch/test/epoch/event_store_test.exs`
+- [x] T040 [P] [US4] Test aggregating stream with evolve function produces correct final state in `apps/epoch/test/epoch/event_store_test.exs`
+- [x] T041 [P] [US4] Test aggregating empty stream returns initial state in `apps/epoch/test/epoch/event_store_test.exs`
+- [x] T042 [P] [US4] Test aggregating with pagination applies evolve only to requested events in `apps/epoch/test/epoch/event_store_test.exs`
+- [x] T043 [P] [US4] Test aggregate result includes both final state and current version in `apps/epoch/test/epoch/event_store_test.exs`
 
 ### Implementation for User Story 4
 
-- [ ] T044 [US4] Implement `handle_call(:aggregate_stream, ...)` using read + Enum.reduce in `apps/epoch/lib/epoch/event_store.ex`
-- [ ] T045 [US4] Implement public API function `aggregate_stream/4` in `apps/epoch/lib/epoch/event_store.ex`
+- [x] T044 [US4] Implement `handle_call(:aggregate_stream, ...)` using read + Enum.reduce in `apps/epoch/lib/epoch/event_store.ex`
+- [x] T045 [US4] Implement public API function `aggregate_stream/4` in `apps/epoch/lib/epoch/event_store.ex`
 
 **Checkpoint**: User Story 4 complete - aggregate reconstruction works independently
 
@@ -157,22 +157,22 @@
 
 ### Tests for User Story 5 (MANDATORY - write these first) ⚠️
 
-- [ ] T046 [P] [US5] Test subscribing immediately invokes callback with existing events in `apps/epoch/test/epoch/event_store/subscription_test.exs`
-- [ ] T047 [P] [US5] Test appending invokes all active subscription callbacks in `apps/epoch/test/epoch/event_store/subscription_test.exs`
-- [ ] T048 [P] [US5] Test subscription callback receives correct events and new version in `apps/epoch/test/epoch/event_store/subscription_test.exs`
-- [ ] T049 [P] [US5] Test unsubscribing prevents future callback invocations in `apps/epoch/test/epoch/event_store/subscription_test.exs`
-- [ ] T050 [P] [US5] Test multiple subscriptions on same stream all receive events independently in `apps/epoch/test/epoch/event_store/subscription_test.exs`
-- [ ] T051 [P] [US5] Integration test: subscription callback errors are isolated (one error doesn't affect others) in `apps/epoch/test/epoch/event_store/subscription_test.exs`
-- [ ] T052 [P] [US5] Test unsubscribing non-existent subscription is idempotent in `apps/epoch/test/epoch/event_store/subscription_test.exs`
+- [x] T046 [P] [US5] Test subscribing immediately invokes callback with existing events in `apps/epoch/test/epoch/event_store/subscription_test.exs`
+- [x] T047 [P] [US5] Test appending invokes all active subscription callbacks in `apps/epoch/test/epoch/event_store/subscription_test.exs`
+- [x] T048 [P] [US5] Test subscription callback receives correct events and new version in `apps/epoch/test/epoch/event_store/subscription_test.exs`
+- [x] T049 [P] [US5] Test unsubscribing prevents future callback invocations in `apps/epoch/test/epoch/event_store/subscription_test.exs`
+- [x] T050 [P] [US5] Test multiple subscriptions on same stream all receive events independently in `apps/epoch/test/epoch/event_store/subscription_test.exs`
+- [x] T051 [P] [US5] Integration test: subscription callback errors are isolated (one error doesn't affect others) in `apps/epoch/test/epoch/event_store/subscription_test.exs`
+- [x] T052 [P] [US5] Test unsubscribing non-existent subscription is idempotent in `apps/epoch/test/epoch/event_store/subscription_test.exs`
 
 ### Implementation for User Story 5
 
-- [ ] T053 [US5] Add subscriptions map to GenServer state in `apps/epoch/lib/epoch/event_store.ex`
-- [ ] T054 [US5] Implement `handle_call(:subscribe, ...)` with immediate callback invocation in `apps/epoch/lib/epoch/event_store.ex`
-- [ ] T055 [US5] Implement `handle_call(:unsubscribe, ...)` in `apps/epoch/lib/epoch/event_store.ex`
-- [ ] T056 [US5] Update append handler to notify subscriptions synchronously with error isolation in `apps/epoch/lib/epoch/event_store.ex`
-- [ ] T057 [US5] Implement public API functions `subscribe/2` and `unsubscribe/2` in `apps/epoch/lib/epoch/event_store.ex`
-- [ ] T058 [US5] Add logging for subscription registration/unregistration and callback errors in `apps/epoch/lib/epoch/event_store.ex`
+- [x] T053 [US5] Add subscriptions map to GenServer state in `apps/epoch/lib/epoch/event_store.ex`
+- [x] T054 [US5] Implement `handle_call(:subscribe, ...)` with immediate callback invocation in `apps/epoch/lib/epoch/event_store.ex`
+- [x] T055 [US5] Implement `handle_call(:unsubscribe, ...)` in `apps/epoch/lib/epoch/event_store.ex`
+- [x] T056 [US5] Update append handler to notify subscriptions synchronously with error isolation in `apps/epoch/lib/epoch/event_store.ex`
+- [x] T057 [US5] Implement public API functions `subscribe/2` and `unsubscribe/2` in `apps/epoch/lib/epoch/event_store.ex`
+- [x] T058 [US5] Add logging for subscription registration/unregistration and callback errors in `apps/epoch/lib/epoch/event_store.ex`
 
 **Checkpoint**: User Story 5 complete - subscriptions work independently
 
@@ -182,13 +182,13 @@
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T059 [P] Implement `debug_all_streams/0` for debugging in `apps/epoch/lib/epoch/event_store.ex`
-- [ ] T060 [P] Add test for debug_all_streams in `apps/epoch/test/epoch/event_store_test.exs`
-- [ ] T061 [P] Integration test: concurrent appends to different streams do not block each other in `apps/epoch/test/epoch/event_store/concurrency_test.exs`
-- [ ] T062 [P] Integration test: GenServer process lifecycle and state in `apps/epoch/test/epoch/event_store/concurrency_test.exs`
-- [ ] T063 Add seed data with sample event streams to `apps/epoch/priv/repo/seeds.exs`
-- [ ] T064 Run quickstart.md validation scenarios manually
-- [ ] T065 Final code review and cleanup
+- [x] T059 [P] Implement `debug_all_streams/0` for debugging in `apps/epoch/lib/epoch/event_store.ex`
+- [x] T060 [P] Add test for debug_all_streams in `apps/epoch/test/epoch/event_store_test.exs`
+- [x] T061 [P] Integration test: concurrent appends to different streams do not block each other in `apps/epoch/test/epoch/event_store/concurrency_test.exs`
+- [x] T062 [P] Integration test: GenServer process lifecycle and state in `apps/epoch/test/epoch/event_store/concurrency_test.exs`
+- [x] T063 Add seed data with sample event streams to `apps/epoch/priv/repo/seeds.exs`
+- [x] T064 Run quickstart.md validation scenarios manually
+- [x] T065 Final code review and cleanup
 
 ---
 
