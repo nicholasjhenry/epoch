@@ -15,6 +15,23 @@ defmodule Epoch.Splices.AddItemTest do
     %{session: session}
   end
 
+  test "given session does not exist then session is created and item added" do
+    # STEP: Given
+    session_id = Ecto.UUID.generate()
+    assert {:error, :not_found} = Cart.get_session(session_id)
+
+    # STEP: When
+    {:ok, session} =
+      CommandHandler.handle(%AddItem{
+        session_id: session_id,
+        product_id: "espresso-blend"
+      })
+
+    # STEP: Then
+    assert session.session_id == session_id
+    assert [%{product_id: "espresso-blend", quantity: 1}] = session.items
+  end
+
   test "given no items added then item added", %{session: session} do
     # STEP: When
     {:ok, _session} =
