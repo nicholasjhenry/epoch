@@ -5,7 +5,8 @@ defmodule Epoch.Slices.AddItem.Component do
   """
   use EpochWeb, :live_component
 
-  alias Epoch.Cart
+  alias Epoch.Slices.AddItem.Command, as: AddItem
+  alias Epoch.Slices.AddItem.CommandHandler
 
   @impl true
   def render(assigns) do
@@ -23,7 +24,24 @@ defmodule Epoch.Slices.AddItem.Component do
 
   @impl true
   def handle_event("add_to_cart", _params, socket) do
-    Cart.add_item(socket.assigns.cart_session_id, socket.assigns.product_id)
-    {:noreply, push_navigate(socket, to: "/cart")}
+    result =
+      CommandHandler.handle(%AddItem{
+        session_id: socket.assigns.cart_session_id,
+        product_id: socket.assigns.product_id
+      })
+
+    case result do
+      {:ok, _session} ->
+        {:noreply, socket}
+
+      {:error, reason} ->
+        send(self(), {:flash, :error, error_message(reason)})
+        {:noreply, socket}
+    end
   end
+
+  defp error_message(:quantity_exceed), do: "Maximum quantity of 3 items per product reached"
+  defp error_message(:product_not_found), do: "Product not found"
+  defp error_message(reason) when is_binary(reason), do: reason
+  defp error_message(_reason), do: "Unable to add item to cart"
 end

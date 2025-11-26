@@ -20,6 +20,11 @@ defmodule EpochWeb.ProductsLive do
      |> assign(:cart_session_id, session_id)}
   end
 
+  @impl true
+  def handle_info({:flash, kind, message}, socket) do
+    {:noreply, put_flash(socket, kind, message)}
+  end
+
   @doc """
   Formats a Decimal price with dollar sign and 2 decimal places.
   """

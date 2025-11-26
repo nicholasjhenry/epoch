@@ -52,6 +52,35 @@ defmodule Epoch.EventStore do
   end
 
   @doc """
+  Constructs a stream name from an aggregate type and identifier.
+
+  This is a convenience function for creating conventional stream names
+  in the format "aggregate-id".
+
+  ## Parameters
+
+    * `aggregate` - The aggregate type (e.g., "order", "user", "payment")
+    * `id` - The unique identifier for the aggregate instance
+
+  ## Returns
+
+  A string in the format "aggregate-id"
+
+  ## Examples
+
+      iex> EventStore.stream_name("order", "123")
+      "order-123"
+
+      iex> EventStore.stream_name("user", "abc-def")
+      "user-abc-def"
+
+  """
+  @spec stream_name(String.t(), String.t()) :: stream_name()
+  def stream_name(aggregate, id) do
+    "#{aggregate}-#{id}"
+  end
+
+  @doc """
   Appends events to a stream.
 
   ## Options

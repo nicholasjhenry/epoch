@@ -1,3 +1,6 @@
+<.flash :if={Phoenix.Flash.get(@flash, :error)} kind={:error} flash={@flash} />
+<.flash :if={Phoenix.Flash.get(@flash, :info)} kind={:info} flash={@flash} />
+
 <nav id="nav-main" class="navbar" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
     <a class="navbar-item" href="/">
