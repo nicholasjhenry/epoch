@@ -69,6 +69,18 @@ defmodule Epoch.Slices.CartItems.Live do
             </tfoot>
           </table>
         </div>
+        <div class="level mt-4">
+          <div class="level-left"></div>
+          <div class="level-right">
+            <div class="level-item">
+              <.live_component
+                module={Epoch.Slices.ClearCart.Component}
+                id="clear-cart-component"
+                cart_session_id={@cart_session_id}
+              />
+            </div>
+          </div>
+        </div>
       <% end %>
     </div>
     """
