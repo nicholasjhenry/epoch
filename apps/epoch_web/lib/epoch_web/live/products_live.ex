@@ -9,22 +9,17 @@ defmodule EpochWeb.ProductsLive do
   alias Epoch.Slices.AddItem
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(_params, session, socket) do
     products = Catalog.list_products()
+    # Cart session is initialized by EpochWeb.Plugs.CartSession
+    cart_session_id = session["cart_session_id"]
 
     socket =
-      if connected?(socket) do
-        session_id = Ecto.UUID.generate()
-        Epoch.Cart.create_session(session_id)
+      socket
+      |> assign(:cart_session_id, cart_session_id)
+      |> assign(:products, products)
 
-        socket
-        |> assign(:cart_session_id, session_id)
-      else
-        socket
-        |> assign(:cart_session_id, nil)
-      end
-
-    {:ok, assign(socket, :products, products)}
+    {:ok, socket}
   end
 
   @impl true

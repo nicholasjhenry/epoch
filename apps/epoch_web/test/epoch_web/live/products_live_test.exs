@@ -3,35 +3,15 @@ defmodule EpochWeb.ProductsLiveTest do
 
   import Phoenix.LiveViewTest
 
-  defp count_all_cart_created_events do
-    # Get all events from EventStore and count CartCreated events
-    {:ok, %{events: events}} = Epoch.EventStore.read_all_events(page_size: 100)
-
-    # Events are wrapped in a map with :event key
-    Enum.count(events, fn %{event: event} ->
-      match?(%Epoch.Cart.Events.CartCreated{}, event)
-    end)
-  end
-
   describe "ProductsLive mount" do
-    test "does not create orphaned cart sessions (only creates cart on connected mount)", %{
-      conn: conn
-    } do
-      # LiveView mount is called twice: once disconnected (HTTP), once connected (WebSocket).
-      # If we create a cart on disconnected mount with a new UUID, it gets orphaned when
-      # connected mount generates a different UUID. We should only create cart when connected.
+    test "cart session is available on mount", %{conn: conn} do
+      # Cart session is created by EpochWeb.Plugs.CartSession during HTTP request
+      {:ok, view, _html} = live(conn, ~p"/products")
 
-      # Count total CartCreated events before and after mounting
-      initial_cart_count = count_all_cart_created_events()
-
-      {:ok, _view, _html} = live(conn, ~p"/products")
-
-      final_cart_count = count_all_cart_created_events()
-
-      # Should only create ONE cart session total (on connected mount only)
-      assert final_cart_count - initial_cart_count == 1,
-             "Expected 1 new cart session but found #{final_cart_count - initial_cart_count}. " <>
-               "An orphaned cart may have been created on disconnected mount."
+      # Verify cart link is rendered with a valid session ID
+      assert has_element?(view, "#nav-cart")
+      html = render(view)
+      assert html =~ ~r/href="\/cart\/[a-f0-9-]{36}"/
     end
 
     test "loads products on mount - verified by rendering all 5 products", %{conn: conn} do
@@ -169,6 +149,65 @@ defmodule EpochWeb.ProductsLiveTest do
       {:ok, _view, html} = live(conn, ~p"/products")
       # Count occurrences of "Add Item" - should be 5 (one per product)
       assert length(Regex.scan(~r/Add Item/, html)) == 5
+    end
+  end
+
+  describe "navigation to cart preserves cart items" do
+    test "items added on products page are visible on cart page", %{conn: conn} do
+      # This is a regression test for the bug where navigating from products
+      # to cart would create a new cart session, losing all items.
+
+      # 1. Mount products page and add an item
+      {:ok, products_view, _html} = live(conn, ~p"/products")
+
+      products_view
+      |> element("#add-item-espresso-blend")
+      |> render_click()
+
+      # 2. Get the cart session ID that was created
+      cart_session_id = get_cart_session_id(products_view)
+      assert cart_session_id != nil, "Cart session ID should be set after adding item"
+
+      # 3. Navigate to cart page with the same session ID
+      {:ok, cart_view, _html} = live(conn, ~p"/cart/#{cart_session_id}")
+
+      # 4. Verify the item is present in the cart
+      assert has_element?(cart_view, "#cart-items"),
+             "Cart should have items table (not be empty)"
+
+      assert has_element?(cart_view, "[id^=cart-item-]"),
+             "Cart should contain the added item"
+
+      # Verify it's specifically the Espresso Blend we added
+      html = render(cart_view)
+      assert html =~ "Espresso Blend", "Cart should contain Espresso Blend"
+      assert html =~ "$14.99", "Cart should show the correct price"
+    end
+
+    test "multiple items persist when navigating to cart", %{conn: conn} do
+      {:ok, products_view, _html} = live(conn, ~p"/products")
+
+      # Add multiple items
+      products_view |> element("#add-item-espresso-blend") |> render_click()
+      products_view |> element("#add-item-french-roast") |> render_click()
+
+      cart_session_id = get_cart_session_id(products_view)
+
+      {:ok, cart_view, _html} = live(conn, ~p"/cart/#{cart_session_id}")
+
+      html = render(cart_view)
+      assert html =~ "Espresso Blend"
+      assert html =~ "French Roast"
+    end
+
+    defp get_cart_session_id(view) do
+      # Extract the cart session ID from the nav link href
+      html = render(view)
+
+      case Regex.run(~r{href="/cart/([^"]+)"}, html) do
+        [_, session_id] -> session_id
+        _ -> nil
+      end
     end
   end
 

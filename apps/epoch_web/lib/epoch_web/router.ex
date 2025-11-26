@@ -8,6 +8,7 @@ defmodule EpochWeb.Router do
     plug :put_root_layout, html: {EpochWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug EpochWeb.Plugs.CartSession
   end
 
   pipeline :api do

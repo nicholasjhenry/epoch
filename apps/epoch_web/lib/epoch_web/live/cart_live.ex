@@ -14,6 +14,7 @@ defmodule EpochWeb.CartLive do
     socket =
       socket
       |> assign(:session_id, session_id)
+      |> assign(:cart_session_id, session_id)
       |> load_cart_items()
 
     {:ok, socket}
