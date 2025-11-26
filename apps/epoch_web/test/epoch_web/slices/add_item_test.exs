@@ -28,29 +28,39 @@ defmodule Epoch.Splices.AddItemTest do
     assert [%{product_id: "espresso-blend", quantity: 1}] = session.items
   end
 
-  test "given items added exceeds quantity limit then returns error", %{session: session} do
-    # STEP: Given
+  test "given cart has 3 items then adding another returns error", %{session: session} do
+    # STEP: Given - add 3 items (mix of products)
     stream_name = EventStore.stream_name("cart", session.session_id)
+    now = DateTime.utc_now()
 
     events = [
-      %Cart.Events.ItemAddedToCart{
+      %Cart.Events.ItemAdded{
+        item_id: "espresso-blend-#{DateTime.to_unix(now)}-1",
         product_id: "espresso-blend",
-        quantity: 2,
-        added_at: DateTime.utc_now()
+        name: "Espresso Blend",
+        price: 14.99,
+        added_at: now
+      },
+      %Cart.Events.ItemAdded{
+        item_id: "french-roast-#{DateTime.to_unix(now)}-1",
+        product_id: "french-roast",
+        name: "French Roast",
+        price: 13.99,
+        added_at: now
+      },
+      %Cart.Events.ItemAdded{
+        item_id: "colombian-supremo-#{DateTime.to_unix(now)}-1",
+        product_id: "colombian-supremo",
+        name: "Colombian Supremo",
+        price: 15.99,
+        added_at: now
       }
     ]
 
     {:ok, _} = EventStore.append_to_stream(stream_name, events)
 
-    # STEP: When
-    {:ok, _session} =
-      CommandHandler.handle(%AddItem{
-        session_id: session.session_id,
-        product_id: "espresso-blend"
-      })
-
-    # STEP: Then
-    assert {:error, :quantity_exceed} =
+    # STEP: Then - adding any item should fail
+    assert {:error, :cart_limit_exceeded} =
              CommandHandler.handle(%AddItem{
                session_id: session.session_id,
                product_id: "espresso-blend"

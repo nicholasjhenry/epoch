@@ -20,6 +20,7 @@ defmodule EpochWeb.Router do
     get "/", PageController, :home
     get "/health", HealthCheck, :health
     live "/products", ProductsLive
+    live "/cart/:session_id", CartLive
   end
 
   # Other scopes may use custom stacks.

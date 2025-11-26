@@ -33,7 +33,7 @@ defmodule Epoch.CartTest do
     end
   end
 
-  describe "add_item/3" do
+  describe "add_item/2" do
     setup do
       session_id = Ecto.UUID.generate()
       {:ok, _} = Cart.create_session(session_id)
@@ -41,20 +41,20 @@ defmodule Epoch.CartTest do
     end
 
     test "adds valid product to cart", %{session_id: session_id} do
-      assert {:ok, session} = Cart.add_item(session_id, "espresso-blend", 1)
+      assert {:ok, session} = Cart.add_item(session_id, "espresso-blend")
       assert [%{product_id: "espresso-blend", quantity: 1}] = session.items
     end
 
     test "increments quantity for existing item", %{session_id: session_id} do
-      {:ok, _} = Cart.add_item(session_id, "espresso-blend", 1)
-      {:ok, session} = Cart.add_item(session_id, "espresso-blend", 2)
+      {:ok, _} = Cart.add_item(session_id, "espresso-blend")
+      {:ok, session} = Cart.add_item(session_id, "espresso-blend")
 
-      assert [%{product_id: "espresso-blend", quantity: 3}] = session.items
+      assert [%{product_id: "espresso-blend", quantity: 2}] = session.items
     end
 
     test "adds multiple different products", %{session_id: session_id} do
-      {:ok, _} = Cart.add_item(session_id, "espresso-blend", 1)
-      {:ok, session} = Cart.add_item(session_id, "french-roast", 2)
+      {:ok, _} = Cart.add_item(session_id, "espresso-blend")
+      {:ok, session} = Cart.add_item(session_id, "french-roast")
 
       assert length(session.items) == 2
       assert Enum.any?(session.items, &(&1.product_id == "espresso-blend"))
@@ -62,16 +62,7 @@ defmodule Epoch.CartTest do
     end
 
     test "rejects invalid product", %{session_id: session_id} do
-      assert {:error, :not_found} =
-               Cart.add_item(session_id, "invalid-product", 1)
-    end
-
-    test "defaults quantity to 1" do
-      session_id = Ecto.UUID.generate()
-      {:ok, _} = Cart.create_session(session_id)
-      {:ok, session} = Cart.add_item(session_id, "espresso-blend")
-
-      assert [%{product_id: "espresso-blend", quantity: 1}] = session.items
+      assert {:error, :not_found} = Cart.add_item(session_id, "invalid-product")
     end
   end
 
@@ -91,7 +82,8 @@ defmodule Epoch.CartTest do
     test "returns session with items after adding" do
       session_id = Ecto.UUID.generate()
       {:ok, _} = Cart.create_session(session_id)
-      {:ok, _} = Cart.add_item(session_id, "espresso-blend", 2)
+      {:ok, _} = Cart.add_item(session_id, "espresso-blend")
+      {:ok, _} = Cart.add_item(session_id, "espresso-blend")
 
       {:ok, session} = Cart.get_session(session_id)
 

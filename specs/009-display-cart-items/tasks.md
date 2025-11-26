@@ -24,10 +24,10 @@
 
 **Purpose**: Create new event struct modules required by all user stories
 
-- [ ] T001 [P] Create ItemAdded event struct in apps/epoch/lib/epoch/cart/events/item_added.ex
-- [ ] T002 [P] Create ItemRemoved event struct in apps/epoch/lib/epoch/cart/events/item_removed.ex
-- [ ] T003 [P] Create CartCleared event struct in apps/epoch/lib/epoch/cart/events/cart_cleared.ex
-- [ ] T004 [P] Create ItemArchived event struct in apps/epoch/lib/epoch/cart/events/item_archived.ex
+- [X] T001 [P] Create ItemAdded event struct in apps/epoch/lib/epoch/cart/events/item_added.ex
+- [X] T002 [P] Create ItemRemoved event struct in apps/epoch/lib/epoch/cart/events/item_removed.ex
+- [X] T003 [P] Create CartCleared event struct in apps/epoch/lib/epoch/cart/events/cart_cleared.ex
+- [X] T004 [P] Create ItemArchived event struct in apps/epoch/lib/epoch/cart/events/item_archived.ex
 
 ---
 
@@ -37,15 +37,15 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T005 Create CartItemsView module with initial_state/0 and empty?/1 in apps/epoch/lib/epoch/cart/cart_items_view.ex
-- [ ] T006 Implement CartItemsView.evolve/2 for ItemAdded event in apps/epoch/lib/epoch/cart/cart_items_view.ex
-- [ ] T007 Implement CartItemsView.evolve/2 for ItemRemoved event in apps/epoch/lib/epoch/cart/cart_items_view.ex
-- [ ] T008 Implement CartItemsView.evolve/2 for CartCleared event in apps/epoch/lib/epoch/cart/cart_items_view.ex
-- [ ] T009 Implement CartItemsView.evolve/2 for ItemArchived event in apps/epoch/lib/epoch/cart/cart_items_view.ex
-- [ ] T010 Implement CartItemsView.evolve/2 fallback for unknown events in apps/epoch/lib/epoch/cart/cart_items_view.ex
-- [ ] T011 Implement CartItemsView.project/1 convenience function in apps/epoch/lib/epoch/cart/cart_items_view.ex
-- [ ] T012 Add get_cart_items/1 function to Cart context in apps/epoch/lib/epoch/cart/cart.ex
-- [ ] T013 Add /cart/:session_id route to router in apps/epoch_web/lib/epoch_web/router.ex
+- [X] T005 Create CartItemsView module with initial_state/0 and empty?/1 in apps/epoch/lib/epoch/cart/cart_items_view.ex
+- [X] T006 Implement CartItemsView.evolve/2 for ItemAdded event in apps/epoch/lib/epoch/cart/cart_items_view.ex
+- [X] T007 Implement CartItemsView.evolve/2 for ItemRemoved event in apps/epoch/lib/epoch/cart/cart_items_view.ex
+- [X] T008 Implement CartItemsView.evolve/2 for CartCleared event in apps/epoch/lib/epoch/cart/cart_items_view.ex
+- [X] T009 Implement CartItemsView.evolve/2 for ItemArchived event in apps/epoch/lib/epoch/cart/cart_items_view.ex
+- [X] T010 Implement CartItemsView.evolve/2 fallback for unknown events in apps/epoch/lib/epoch/cart/cart_items_view.ex
+- [X] T011 Implement CartItemsView.project/1 convenience function in apps/epoch/lib/epoch/cart/cart_items_view.ex
+- [X] T012 Add get_cart_items/1 function to Cart context in apps/epoch/lib/epoch/cart/cart.ex
+- [X] T013 Add /cart/:session_id route to router in apps/epoch_web/lib/epoch_web/router.ex
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -59,18 +59,18 @@
 
 ### Tests for User Story 1 (MANDATORY - write these first) ⚠️
 
-- [ ] T014 [P] [US1] Unit test: CartItemsView returns empty list for empty event list in apps/epoch/test/epoch/cart/cart_items_view_test.exs
-- [ ] T015 [P] [US1] Unit test: CartItemsView adds item when processing ItemAdded event in apps/epoch/test/epoch/cart/cart_items_view_test.exs
-- [ ] T016 [P] [US1] Unit test: CartItemsView processes sequence of ItemAdded events correctly in apps/epoch/test/epoch/cart/cart_items_view_test.exs
-- [ ] T017 [P] [US1] Integration test: Cart page loads and displays items from EventStore in apps/epoch_web/test/epoch_web/live/cart_live_test.exs
-- [ ] T018 [P] [US1] Integration test: Cart page correctly renders item names and formatted prices in apps/epoch_web/test/epoch_web/live/cart_live_test.exs
+- [X] T014 [P] [US1] Unit test: CartItemsView returns empty list for empty event list in apps/epoch/test/epoch/cart/cart_items_view_test.exs
+- [X] T015 [P] [US1] Unit test: CartItemsView adds item when processing ItemAdded event in apps/epoch/test/epoch/cart/cart_items_view_test.exs
+- [X] T016 [P] [US1] Unit test: CartItemsView processes sequence of ItemAdded events correctly in apps/epoch/test/epoch/cart/cart_items_view_test.exs
+- [X] T017 [P] [US1] Integration test: Cart page loads and displays items from EventStore in apps/epoch_web/test/epoch_web/live/cart_live_test.exs
+- [X] T018 [P] [US1] Integration test: Cart page correctly renders item names and formatted prices in apps/epoch_web/test/epoch_web/live/cart_live_test.exs
 
 ### Implementation for User Story 1
 
-- [ ] T019 [US1] Create CartLive module with mount/3 that loads cart items via Cart.get_cart_items/1 in apps/epoch_web/lib/epoch_web/live/cart_live.ex
-- [ ] T020 [US1] Create cart_live.html.heex template with items table showing name and price in apps/epoch_web/lib/epoch_web/live/cart_live.html.heex
-- [ ] T021 [US1] Implement format_price/1 helper for currency formatting ($X.XX) in apps/epoch_web/lib/epoch_web/live/cart_live.ex
-- [ ] T022 [US1] Add DOM IDs per contract (#cart, #cart-items, #cart-item-{id}) in apps/epoch_web/lib/epoch_web/live/cart_live.html.heex
+- [X] T019 [US1] Create CartLive module with mount/3 that loads cart items via Cart.get_cart_items/1 in apps/epoch_web/lib/epoch_web/live/cart_live.ex
+- [X] T020 [US1] Create cart_live.html.heex template with items table showing name and price in apps/epoch_web/lib/epoch_web/live/cart_live.html.heex
+- [X] T021 [US1] Implement format_price/1 helper for currency formatting ($X.XX) in apps/epoch_web/lib/epoch_web/live/cart_live.ex
+- [X] T022 [US1] Add DOM IDs per contract (#cart, #cart-items, #cart-item-{id}) in apps/epoch_web/lib/epoch_web/live/cart_live.html.heex
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -84,14 +84,14 @@
 
 ### Tests for User Story 2 (MANDATORY - write these first) ⚠️
 
-- [ ] T023 [P] [US2] Unit test: Cart total calculation sums all item prices correctly in apps/epoch/test/epoch/cart/cart_items_view_test.exs
-- [ ] T024 [P] [US2] Unit test: Cart total is 0.0 when cart is empty in apps/epoch/test/epoch/cart/cart_items_view_test.exs
-- [ ] T025 [P] [US2] Integration test: Cart page displays correct total after processing events in apps/epoch_web/test/epoch_web/live/cart_live_test.exs
+- [X] T023 [P] [US2] Unit test: Cart total calculation sums all item prices correctly in apps/epoch/test/epoch/cart/cart_items_view_test.exs
+- [X] T024 [P] [US2] Unit test: Cart total is 0.0 when cart is empty in apps/epoch/test/epoch/cart/cart_items_view_test.exs
+- [X] T025 [P] [US2] Integration test: Cart page displays correct total after processing events in apps/epoch_web/test/epoch_web/live/cart_live_test.exs
 
 ### Implementation for User Story 2
 
-- [ ] T026 [US2] Add cart total display to template footer with #cart-total ID in apps/epoch_web/lib/epoch_web/live/cart_live.html.heex
-- [ ] T027 [US2] Ensure @cart_total assign is populated from CartItemsView state in apps/epoch_web/lib/epoch_web/live/cart_live.ex
+- [X] T026 [US2] Add cart total display to template footer with #cart-total ID in apps/epoch_web/lib/epoch_web/live/cart_live.html.heex
+- [X] T027 [US2] Ensure @cart_total assign is populated from CartItemsView state in apps/epoch_web/lib/epoch_web/live/cart_live.ex
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 
@@ -105,15 +105,15 @@
 
 ### Tests for User Story 3 (MANDATORY - write these first) ⚠️
 
-- [ ] T028 [P] [US3] Unit test: CartItemsView.empty?/1 returns true for empty cart state in apps/epoch/test/epoch/cart/cart_items_view_test.exs
-- [ ] T029 [P] [US3] Unit test: CartItemsView.empty?/1 returns false for cart with items in apps/epoch/test/epoch/cart/cart_items_view_test.exs
-- [ ] T030 [P] [US3] Integration test: Cart page displays empty state message when no events exist in apps/epoch_web/test/epoch_web/live/cart_live_test.exs
-- [ ] T031 [P] [US3] Integration test: Cart page hides items table and total when empty in apps/epoch_web/test/epoch_web/live/cart_live_test.exs
+- [X] T028 [P] [US3] Unit test: CartItemsView.empty?/1 returns true for empty cart state in apps/epoch/test/epoch/cart/cart_items_view_test.exs
+- [X] T029 [P] [US3] Unit test: CartItemsView.empty?/1 returns false for cart with items in apps/epoch/test/epoch/cart/cart_items_view_test.exs
+- [X] T030 [P] [US3] Integration test: Cart page displays empty state message when no events exist in apps/epoch_web/test/epoch_web/live/cart_live_test.exs
+- [X] T031 [P] [US3] Integration test: Cart page hides items table and total when empty in apps/epoch_web/test/epoch_web/live/cart_live_test.exs
 
 ### Implementation for User Story 3
 
-- [ ] T032 [US3] Add conditional rendering for empty cart message (#cart-empty) in apps/epoch_web/lib/epoch_web/live/cart_live.html.heex
-- [ ] T033 [US3] Hide items table and total when @cart_empty? is true in apps/epoch_web/lib/epoch_web/live/cart_live.html.heex
+- [X] T032 [US3] Add conditional rendering for empty cart message (#cart-empty) in apps/epoch_web/lib/epoch_web/live/cart_live.html.heex
+- [X] T033 [US3] Hide items table and total when @cart_empty? is true in apps/epoch_web/lib/epoch_web/live/cart_live.html.heex
 
 **Checkpoint**: User Stories 1, 2, and 3 should all work independently
 
@@ -127,15 +127,15 @@
 
 ### Tests for User Story 4 (MANDATORY - write these first) ⚠️
 
-- [ ] T034 [P] [US4] Unit test: CartItemsView removes item when processing ItemRemoved event with matching itemId in apps/epoch/test/epoch/cart/cart_items_view_test.exs
-- [ ] T035 [P] [US4] Unit test: CartItemsView total decreases when item removed in apps/epoch/test/epoch/cart/cart_items_view_test.exs
-- [ ] T036 [P] [US4] Unit test: CartItemsView handles ItemRemoved for non-existent item gracefully in apps/epoch/test/epoch/cart/cart_items_view_test.exs
-- [ ] T037 [P] [US4] Integration test: Cart page shows only remaining items after ItemRemoved event in apps/epoch_web/test/epoch_web/live/cart_live_test.exs
+- [X] T034 [P] [US4] Unit test: CartItemsView removes item when processing ItemRemoved event with matching itemId in apps/epoch/test/epoch/cart/cart_items_view_test.exs
+- [X] T035 [P] [US4] Unit test: CartItemsView total decreases when item removed in apps/epoch/test/epoch/cart/cart_items_view_test.exs
+- [X] T036 [P] [US4] Unit test: CartItemsView handles ItemRemoved for non-existent item gracefully in apps/epoch/test/epoch/cart/cart_items_view_test.exs
+- [X] T037 [P] [US4] Integration test: Cart page shows only remaining items after ItemRemoved event in apps/epoch_web/test/epoch_web/live/cart_live_test.exs
 
 ### Implementation for User Story 4
 
-- [ ] T038 [US4] Verify CartItemsView.evolve/2 correctly handles ItemRemoved (implemented in Phase 2) in apps/epoch/lib/epoch/cart/cart_items_view.ex
-- [ ] T039 [US4] Add integration test fixture with ItemAdded then ItemRemoved sequence in apps/epoch_web/test/epoch_web/live/cart_live_test.exs
+- [X] T038 [US4] Verify CartItemsView.evolve/2 correctly handles ItemRemoved (implemented in Phase 2) in apps/epoch/lib/epoch/cart/cart_items_view.ex
+- [X] T039 [US4] Add integration test fixture with ItemAdded then ItemRemoved sequence in apps/epoch_web/test/epoch_web/live/cart_live_test.exs
 
 **Checkpoint**: User Stories 1-4 should all work independently
 
@@ -149,14 +149,14 @@
 
 ### Tests for User Story 5 (MANDATORY - write these first) ⚠️
 
-- [ ] T040 [P] [US5] Unit test: CartItemsView clears all items when processing CartCleared event in apps/epoch/test/epoch/cart/cart_items_view_test.exs
-- [ ] T041 [P] [US5] Unit test: CartItemsView total is 0.0 after CartCleared in apps/epoch/test/epoch/cart/cart_items_view_test.exs
-- [ ] T042 [P] [US5] Integration test: Cart page displays empty state after CartCleared event in apps/epoch_web/test/epoch_web/live/cart_live_test.exs
+- [X] T040 [P] [US5] Unit test: CartItemsView clears all items when processing CartCleared event in apps/epoch/test/epoch/cart/cart_items_view_test.exs
+- [X] T041 [P] [US5] Unit test: CartItemsView total is 0.0 after CartCleared in apps/epoch/test/epoch/cart/cart_items_view_test.exs
+- [X] T042 [P] [US5] Integration test: Cart page displays empty state after CartCleared event in apps/epoch_web/test/epoch_web/live/cart_live_test.exs
 
 ### Implementation for User Story 5
 
-- [ ] T043 [US5] Verify CartItemsView.evolve/2 correctly handles CartCleared (implemented in Phase 2) in apps/epoch/lib/epoch/cart/cart_items_view.ex
-- [ ] T044 [US5] Add integration test fixture with items then CartCleared sequence in apps/epoch_web/test/epoch_web/live/cart_live_test.exs
+- [X] T043 [US5] Verify CartItemsView.evolve/2 correctly handles CartCleared (implemented in Phase 2) in apps/epoch/lib/epoch/cart/cart_items_view.ex
+- [X] T044 [US5] Add integration test fixture with items then CartCleared sequence in apps/epoch_web/test/epoch_web/live/cart_live_test.exs
 
 **Checkpoint**: All user stories should now be independently functional
 
@@ -168,14 +168,14 @@
 
 ### Tests (MANDATORY - write these first) ⚠️
 
-- [ ] T045 [P] Unit test: CartItemsView removes item when processing ItemArchived event in apps/epoch/test/epoch/cart/cart_items_view_test.exs
-- [ ] T046 [P] Unit test: CartItemsView ignores unknown event types in apps/epoch/test/epoch/cart/cart_items_view_test.exs
-- [ ] T047 [P] Unit test: CartItemsView correctly processes mixed event sequence in apps/epoch/test/epoch/cart/cart_items_view_test.exs
+- [X] T045 [P] Unit test: CartItemsView removes item when processing ItemArchived event in apps/epoch/test/epoch/cart/cart_items_view_test.exs
+- [X] T046 [P] Unit test: CartItemsView ignores unknown event types in apps/epoch/test/epoch/cart/cart_items_view_test.exs
+- [X] T047 [P] Unit test: CartItemsView correctly processes mixed event sequence in apps/epoch/test/epoch/cart/cart_items_view_test.exs
 
 ### Implementation
 
-- [ ] T048 Verify CartItemsView.evolve/2 correctly handles ItemArchived (implemented in Phase 2) in apps/epoch/lib/epoch/cart/cart_items_view.ex
-- [ ] T049 Add logging for skipped/unknown events in apps/epoch/lib/epoch/cart/cart_items_view.ex
+- [X] T048 Verify CartItemsView.evolve/2 correctly handles ItemArchived (implemented in Phase 2) in apps/epoch/lib/epoch/cart/cart_items_view.ex
+- [X] T049 Add logging for skipped/unknown events in apps/epoch/lib/epoch/cart/cart_items_view.ex
 
 ---
 
@@ -183,9 +183,9 @@
 
 **Purpose**: Final cleanup and validation
 
-- [ ] T050 Ensure all tests pass with `mix test`
-- [ ] T051 Run quickstart.md validation steps
-- [ ] T052 Verify Cart context error handling for EventStore unavailability in apps/epoch/lib/epoch/cart/cart.ex
+- [X] T050 Ensure all tests pass with `mix test`
+- [X] T051 Run quickstart.md validation steps
+- [X] T052 Verify Cart context error handling for EventStore unavailability in apps/epoch/lib/epoch/cart/cart.ex
 
 ---
 

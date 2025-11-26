@@ -5,8 +5,9 @@ defmodule Epoch.Cart do
   Cart state is event-sourced using Epoch.EventStore.
   """
 
+  alias Epoch.Cart.CartItemsView
   alias Epoch.Cart.CartSession
-  alias Epoch.Cart.Events.{CartCreated, ItemAddedToCart}
+  alias Epoch.Cart.Events.{CartCreated, ItemAdded}
   alias Epoch.Catalog
   alias Epoch.EventStore
 
@@ -34,16 +35,19 @@ defmodule Epoch.Cart do
   Adds a product to the cart.
 
   Validates the product exists in the catalog before adding.
-  Defaults to quantity of 1 if not specified.
+  Each call adds a single item to the cart.
   """
-  @spec add_item(String.t(), String.t(), pos_integer()) ::
-          {:ok, CartSession.t()} | {:error, term()}
-  def add_item(session_id, product_id, quantity \\ 1) do
-    with {:ok, _product} <- Catalog.get_product(product_id) do
-      event = %ItemAddedToCart{
+  @spec add_item(String.t(), String.t()) :: {:ok, CartSession.t()} | {:error, term()}
+  def add_item(session_id, product_id) do
+    with {:ok, product} <- Catalog.get_product(product_id) do
+      now = DateTime.utc_now()
+
+      event = %ItemAdded{
+        item_id: "#{product_id}-#{DateTime.to_unix(now, :microsecond)}",
         product_id: product_id,
-        quantity: quantity,
-        added_at: DateTime.utc_now()
+        name: product.name,
+        price: Decimal.to_float(product.price),
+        added_at: now
       }
 
       stream_name = stream_name(session_id)
@@ -75,6 +79,25 @@ defmodule Epoch.Cart do
       {:ok, %{state: session}} ->
         {:ok, session}
     end
+  end
+
+  @doc """
+  Retrieves displayable cart items for a session.
+
+  Returns the cart items state including items list and total.
+  """
+  @spec get_cart_items(String.t()) :: {:ok, CartItemsView.state()}
+  def get_cart_items(session_id) do
+    stream_name = stream_name(session_id)
+
+    {:ok, %{state: state}} =
+      EventStore.aggregate_stream(
+        stream_name,
+        CartItemsView.initial_state(),
+        &CartItemsView.evolve/2
+      )
+
+    {:ok, state}
   end
 
   defp stream_name(session_id), do: "cart-#{session_id}"
