@@ -25,8 +25,8 @@
 
 **Purpose**: Verify existing infrastructure and create slice directory structure
 
-- [ ] T001 Verify existing EventStore, Cart context, and ItemRemoved event are functional
-- [ ] T002 Create remove_item slice directory at apps/epoch_web/lib/epoch_web/slices/remove_item/
+- [X] T001 Verify existing EventStore, Cart context, and ItemRemoved event are functional
+- [X] T002 Create remove_item slice directory at apps/epoch_web/lib/epoch_web/slices/remove_item/
 
 ---
 
@@ -36,10 +36,10 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T003 Create RemoveItem.Command struct in apps/epoch_web/lib/epoch_web/slices/remove_item/command.ex
-- [ ] T004 Create RemoveItem.CommandHandler with handle/1 in apps/epoch_web/lib/epoch_web/slices/remove_item/command_handler.ex
-- [ ] T005 Add PubSub subscription to CartLive mount/3 in apps/epoch_web/lib/epoch_web/live/cart_live.ex
-- [ ] T006 Add handle_info/2 for {:events_appended, _, _} in apps/epoch_web/lib/epoch_web/live/cart_live.ex
+- [X] T003 Create RemoveItem.Command struct in apps/epoch_web/lib/epoch_web/slices/remove_item/command.ex
+- [X] T004 Create RemoveItem.CommandHandler with handle/1 in apps/epoch_web/lib/epoch_web/slices/remove_item/command_handler.ex
+- [X] T005 Add PubSub subscription to CartLive mount/3 in apps/epoch_web/lib/epoch_web/live/cart_live.ex
+- [X] T006 Add handle_info/2 for {:events_appended, _, _} in apps/epoch_web/lib/epoch_web/live/cart_live.ex
 
 **Checkpoint**: Foundation ready - CommandHandler and real-time updates functional
 
@@ -55,20 +55,20 @@
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T007 [P] [US1] Unit test "handle/1 returns error when item_id not in cart" in apps/epoch_web/test/epoch_web/slices/remove_item_test.exs
-- [ ] T008 [P] [US1] Unit test "handle/1 appends ItemRemoved event when item exists" in apps/epoch_web/test/epoch_web/slices/remove_item_test.exs
-- [ ] T009 [P] [US1] Unit test "handle/1 returns updated cart session after removal" in apps/epoch_web/test/epoch_web/slices/remove_item_test.exs
-- [ ] T010 [P] [US1] Integration test "clicking remove button removes item from cart display" in apps/epoch_web/test/epoch_web/slices/remove_item_test.exs
-- [ ] T011 [P] [US1] Integration test "cart total updates after item removal" in apps/epoch_web/test/epoch_web/slices/remove_item_test.exs
-- [ ] T012 [P] [US1] Integration test "removing last item shows empty cart state" in apps/epoch_web/test/epoch_web/slices/remove_item_test.exs
-- [ ] T013 [P] [US1] Integration test "removing non-existent item shows error flash" in apps/epoch_web/test/epoch_web/slices/remove_item_test.exs
+- [X] T007 [P] [US1] Unit test "handle/1 returns error when item_id not in cart" in apps/epoch_web/test/epoch_web/slices/remove_item_test.exs
+- [X] T008 [P] [US1] Unit test "handle/1 appends ItemRemoved event when item exists" in apps/epoch_web/test/epoch_web/slices/remove_item_test.exs
+- [X] T009 [P] [US1] Unit test "handle/1 returns updated cart session after removal" in apps/epoch_web/test/epoch_web/slices/remove_item_test.exs
+- [X] T010 [P] [US1] Integration test "clicking remove button removes item from cart display" in apps/epoch_web/test/epoch_web/slices/remove_item_test.exs
+- [X] T011 [P] [US1] Integration test "cart total updates after item removal" in apps/epoch_web/test/epoch_web/slices/remove_item_test.exs
+- [X] T012 [P] [US1] Integration test "removing last item shows empty cart state" in apps/epoch_web/test/epoch_web/slices/remove_item_test.exs
+- [X] T013 [P] [US1] Integration test "removing non-existent item shows error flash" in apps/epoch_web/test/epoch_web/slices/remove_item_test.exs
 
 ### Implementation for User Story 1
 
-- [ ] T014 [US1] Create RemoveItem.Component LiveComponent in apps/epoch_web/lib/epoch_web/slices/remove_item/component.ex
-- [ ] T015 [US1] Add remove button column to cart item rows in apps/epoch_web/lib/epoch_web/live/cart_live.html.heex
-- [ ] T016 [US1] Add handle_info/2 for {:flash, :error, message} in apps/epoch_web/lib/epoch_web/live/cart_live.ex
-- [ ] T017 [US1] Verify all tests pass and cart removal works end-to-end
+- [X] T014 [US1] Create RemoveItem.Component LiveComponent in apps/epoch_web/lib/epoch_web/slices/remove_item/component.ex
+- [X] T015 [US1] Add remove button column to cart item rows in apps/epoch_web/lib/epoch_web/live/cart_live.html.heex
+- [X] T016 [US1] Add handle_info/2 for {:flash, :error, message} in apps/epoch_web/lib/epoch_web/live/cart_live.ex
+- [X] T017 [US1] Verify all tests pass and cart removal works end-to-end
 
 **Checkpoint**: User Story 1 complete - users can remove items, total updates, empty state displays
 
@@ -82,12 +82,12 @@
 
 ### Tests for User Story 2 (MANDATORY - write these first) ⚠️
 
-- [ ] T018 [US2] Integration test "item disappears immediately after clicking remove" in apps/epoch_web/test/epoch_web/slices/remove_item_test.exs
+- [X] T018 [US2] Integration test "item disappears immediately after clicking remove" in apps/epoch_web/test/epoch_web/slices/remove_item_test.exs
 
 ### Implementation for User Story 2
 
-- [ ] T019 [US2] Verify PubSub-based real-time update provides sub-500ms feedback (already implemented in Foundational phase)
-- [ ] T020 [US2] Verify cart total updates reflect immediately in UI
+- [X] T019 [US2] Verify PubSub-based real-time update provides sub-500ms feedback (already implemented in Foundational phase)
+- [X] T020 [US2] Verify cart total updates reflect immediately in UI
 
 **Checkpoint**: User Story 2 complete - visual feedback is immediate and responsive
 
@@ -101,13 +101,13 @@
 
 ### Tests for User Story 3 (MANDATORY - write these first) ⚠️
 
-- [ ] T021 [US3] Integration test "each cart item displays a remove button" in apps/epoch_web/test/epoch_web/slices/remove_item_test.exs
-- [ ] T022 [US3] Integration test "remove button has accessible label" in apps/epoch_web/test/epoch_web/slices/remove_item_test.exs
+- [X] T021 [US3] Integration test "each cart item displays a remove button" in apps/epoch_web/test/epoch_web/slices/remove_item_test.exs
+- [X] T022 [US3] Integration test "remove button has accessible label" in apps/epoch_web/test/epoch_web/slices/remove_item_test.exs
 
 ### Implementation for User Story 3
 
-- [ ] T023 [US3] Style remove button with Tailwind classes for visual distinction in apps/epoch_web/lib/epoch_web/slices/remove_item/component.ex
-- [ ] T024 [US3] Add aria-label or title attribute for accessibility in apps/epoch_web/lib/epoch_web/slices/remove_item/component.ex
+- [X] T023 [US3] Style remove button with Tailwind classes for visual distinction in apps/epoch_web/lib/epoch_web/slices/remove_item/component.ex
+- [X] T024 [US3] Add aria-label or title attribute for accessibility in apps/epoch_web/lib/epoch_web/slices/remove_item/component.ex
 
 **Checkpoint**: User Story 3 complete - remove buttons are visible and accessible
 
@@ -117,9 +117,9 @@
 
 **Purpose**: Final cleanup and validation
 
-- [ ] T025 Run full test suite to verify no regressions: mix test
-- [ ] T026 Run quickstart.md manual verification steps
-- [ ] T027 Verify error logging for remove failures per plan.md failure handling table
+- [X] T025 Run full test suite to verify no regressions: mix test
+- [X] T026 Run quickstart.md manual verification steps
+- [X] T027 Verify error logging for remove failures per plan.md failure handling table
 
 ---
 

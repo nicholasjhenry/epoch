@@ -3,7 +3,8 @@ defmodule EpochWeb.CartLive do
   LiveView for displaying shopping cart items.
 
   Projects cart events into a displayable state showing item names,
-  prices, and cart total.
+  prices, and cart total. Subscribes to PubSub for real-time updates
+  when items are added or removed.
   """
   use EpochWeb, :live_view
 
@@ -11,6 +12,10 @@ defmodule EpochWeb.CartLive do
 
   @impl true
   def mount(%{"session_id" => session_id}, _session, socket) do
+    if connected?(socket) do
+      Phoenix.PubSub.subscribe(Epoch.PubSub, "stream_type:cart")
+    end
+
     socket =
       socket
       |> assign(:session_id, session_id)
@@ -18,6 +23,21 @@ defmodule EpochWeb.CartLive do
       |> load_cart_items()
 
     {:ok, socket}
+  end
+
+  @impl true
+  def handle_info({:events_appended, stream_name, _events}, socket) do
+    # Only reload if the event is for this cart session
+    if stream_name == "cart-#{socket.assigns.session_id}" do
+      {:noreply, load_cart_items(socket)}
+    else
+      {:noreply, socket}
+    end
+  end
+
+  @impl true
+  def handle_info({:flash, level, message}, socket) do
+    {:noreply, put_flash(socket, level, message)}
   end
 
   defp load_cart_items(socket) do

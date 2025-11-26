@@ -26,6 +26,8 @@
   </div>
 </nav>
 
+<.flash id="flash-error" kind={:error} flash={@flash} />
+
 <div id="cart" class="box">
   <h3 class="title is-4">Shopping Cart</h3>
 
@@ -40,18 +42,29 @@
           <tr>
             <th>Product</th>
             <th>Price</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr :for={item <- @cart_items} id={"cart-item-#{item.item_id}"}>
             <td id={"cart-item-name-#{item.item_id}"}>{item.name}</td>
             <td id={"cart-item-price-#{item.item_id}"}>{format_price(item.price)}</td>
+            <td>
+              <.live_component
+                module={Epoch.Slices.RemoveItem.Component}
+                id={"remove-component-#{item.item_id}"}
+                item_id={item.item_id}
+                item_name={item.name}
+                cart_session_id={@cart_session_id}
+              />
+            </td>
           </tr>
         </tbody>
         <tfoot>
           <tr>
             <th class="has-text-right">Total:</th>
             <th id="cart-total">{format_price(@cart_total)}</th>
+            <th></th>
           </tr>
         </tfoot>
       </table>
