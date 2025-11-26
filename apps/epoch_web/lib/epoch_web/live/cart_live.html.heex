@@ -31,43 +31,8 @@
 <div id="cart" class="box">
   <h3 class="title is-4">Shopping Cart</h3>
 
-  <%= if @cart_empty? do %>
-    <div id="cart-empty" class="notification is-light">
-      Your cart is empty
-    </div>
-  <% else %>
-    <div class="table-container">
-      <table id="cart-items" class="table is-fullwidth is-striped">
-        <thead>
-          <tr>
-            <th>Product</th>
-            <th>Price</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr :for={item <- @cart_items} id={"cart-item-#{item.item_id}"}>
-            <td id={"cart-item-name-#{item.item_id}"}>{item.name}</td>
-            <td id={"cart-item-price-#{item.item_id}"}>{format_price(item.price)}</td>
-            <td>
-              <.live_component
-                module={Epoch.Slices.RemoveItem.Component}
-                id={"remove-component-#{item.item_id}"}
-                item_id={item.item_id}
-                item_name={item.name}
-                cart_session_id={@cart_session_id}
-              />
-            </td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr>
-            <th class="has-text-right">Total:</th>
-            <th id="cart-total">{format_price(@cart_total)}</th>
-            <th></th>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
-  <% end %>
+  <%= live_render(@socket, Epoch.Slices.CartItems.Live,
+    id: "cart-items-live",
+    session: %{"session_id" => @session_id}
+  ) %>
 </div>

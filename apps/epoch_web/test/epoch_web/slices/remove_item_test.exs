@@ -147,18 +147,21 @@ defmodule Epoch.Slices.RemoveItemTest do
 
       {:ok, view, _html} = live(conn, ~p"/cart/#{session_id}")
 
+      # Get the nested CartItems LiveView
+      cart_items_view = find_live_child(view, "cart-items-live")
+
       # Verify both items are displayed
-      assert has_element?(view, "#cart-item-item-1")
-      assert has_element?(view, "#cart-item-item-2")
+      assert has_element?(cart_items_view, "#cart-item-item-1")
+      assert has_element?(cart_items_view, "#cart-item-item-2")
 
       # STEP: When - click remove button for item-1
-      view
+      cart_items_view
       |> element("#remove-item-item-1")
       |> render_click()
 
       # STEP: Then - item-1 is removed, item-2 remains
-      refute has_element?(view, "#cart-item-item-1")
-      assert has_element?(view, "#cart-item-item-2")
+      refute has_element?(cart_items_view, "#cart-item-item-1")
+      assert has_element?(cart_items_view, "#cart-item-item-2")
     end
 
     test "given two items then removing one updates cart total", %{
@@ -188,16 +191,19 @@ defmodule Epoch.Slices.RemoveItemTest do
 
       {:ok, view, _html} = live(conn, ~p"/cart/#{session_id}")
 
+      # Get the nested CartItems LiveView
+      cart_items_view = find_live_child(view, "cart-items-live")
+
       # Verify initial total
-      assert has_element?(view, "#cart-total", "$28.98")
+      assert has_element?(cart_items_view, "#cart-total", "$28.98")
 
       # STEP: When - remove item-1
-      view
+      cart_items_view
       |> element("#remove-item-item-1")
       |> render_click()
 
       # STEP: Then - total updates to only item-2's price
-      assert has_element?(view, "#cart-total", "$13.99")
+      assert has_element?(cart_items_view, "#cart-total", "$13.99")
     end
 
     test "given one item then removing it shows empty cart state", %{
@@ -220,21 +226,24 @@ defmodule Epoch.Slices.RemoveItemTest do
 
       {:ok, view, _html} = live(conn, ~p"/cart/#{session_id}")
 
+      # Get the nested CartItems LiveView
+      cart_items_view = find_live_child(view, "cart-items-live")
+
       # Verify item is displayed
-      assert has_element?(view, "#cart-item-item-1")
-      refute has_element?(view, "#cart-empty")
+      assert has_element?(cart_items_view, "#cart-item-item-1")
+      refute has_element?(cart_items_view, "#cart-empty")
 
       # STEP: When - remove the only item
-      view
+      cart_items_view
       |> element("#remove-item-item-1")
       |> render_click()
 
       # STEP: Then - empty cart state is shown
-      assert has_element?(view, "#cart-empty")
-      refute has_element?(view, "#cart-items")
+      assert has_element?(cart_items_view, "#cart-empty")
+      refute has_element?(cart_items_view, "#cart-items")
     end
 
-    test "given error flash message then it is displayed", %{
+    test "given error flash message then it is displayed in nested view", %{
       conn: conn,
       session_id: session_id,
       stream_name: stream_name
@@ -254,11 +263,14 @@ defmodule Epoch.Slices.RemoveItemTest do
 
       {:ok, view, _html} = live(conn, ~p"/cart/#{session_id}")
 
-      # STEP: When - send flash message (simulates component error handling)
-      send(view.pid, {:flash, :error, "Item not found in cart"})
+      # Get the nested CartItems LiveView
+      cart_items_view = find_live_child(view, "cart-items-live")
+
+      # STEP: When - send flash message to nested view (simulates component error handling)
+      send(cart_items_view.pid, {:flash, :error, "Item not found in cart"})
 
       # STEP: Then - flash message is displayed
-      assert render(view) =~ "Item not found in cart"
+      assert render(cart_items_view) =~ "Item not found in cart"
     end
   end
 
@@ -286,15 +298,18 @@ defmodule Epoch.Slices.RemoveItemTest do
       {:ok, _} = EventStore.append_to_stream(stream_name, events)
 
       {:ok, view, _html} = live(conn, ~p"/cart/#{session_id}")
-      assert has_element?(view, "#cart-item-item-1")
+
+      # Get the nested CartItems LiveView
+      cart_items_view = find_live_child(view, "cart-items-live")
+      assert has_element?(cart_items_view, "#cart-item-item-1")
 
       # STEP: When - click remove
-      view
+      cart_items_view
       |> element("#remove-item-item-1")
       |> render_click()
 
       # STEP: Then - item is gone (PubSub triggers reload within same request cycle)
-      refute has_element?(view, "#cart-item-item-1")
+      refute has_element?(cart_items_view, "#cart-item-item-1")
     end
   end
 
@@ -330,9 +345,12 @@ defmodule Epoch.Slices.RemoveItemTest do
 
       {:ok, view, _html} = live(conn, ~p"/cart/#{session_id}")
 
+      # Get the nested CartItems LiveView
+      cart_items_view = find_live_child(view, "cart-items-live")
+
       # STEP: Then - each item row has a remove button
-      assert has_element?(view, "#remove-item-item-1")
-      assert has_element?(view, "#remove-item-item-2")
+      assert has_element?(cart_items_view, "#remove-item-item-1")
+      assert has_element?(cart_items_view, "#remove-item-item-2")
     end
 
     test "given item in cart then remove button has accessible label", %{
@@ -355,8 +373,11 @@ defmodule Epoch.Slices.RemoveItemTest do
 
       {:ok, view, _html} = live(conn, ~p"/cart/#{session_id}")
 
+      # Get the nested CartItems LiveView
+      cart_items_view = find_live_child(view, "cart-items-live")
+
       # STEP: Then - remove button has aria-label for accessibility
-      html = render(view)
+      html = render(cart_items_view)
       assert html =~ ~r/aria-label="Remove Espresso Blend from cart"/
     end
   end
