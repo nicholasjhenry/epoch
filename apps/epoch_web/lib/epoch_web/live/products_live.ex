@@ -5,13 +5,13 @@ defmodule EpochWeb.ProductsLive do
   """
   use EpochWeb, :live_view
 
-  alias Epoch.Cart
   alias Epoch.Catalog
+  alias Epoch.Slices.AddItem
 
   @impl true
   def mount(_params, _session, socket) do
     session_id = Ecto.UUID.generate()
-    Cart.create_session(session_id)
+    Epoch.Cart.create_session(session_id)
     products = Catalog.list_products()
 
     {:ok,
@@ -21,9 +21,8 @@ defmodule EpochWeb.ProductsLive do
   end
 
   @impl true
-  def handle_event("add_to_cart", %{"product-id" => product_id}, socket) do
-    Cart.add_item(socket.assigns.cart_session_id, product_id)
-    {:noreply, push_navigate(socket, to: "/cart")}
+  def handle_info({:flash, kind, message}, socket) do
+    {:noreply, put_flash(socket, kind, message)}
   end
 
   @doc """

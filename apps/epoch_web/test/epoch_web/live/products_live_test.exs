@@ -19,12 +19,15 @@ defmodule EpochWeb.ProductsLiveTest do
       {:ok, view, _html} = live(conn, ~p"/products")
 
       # Click add to cart - this will fail if no session was created
-      view
-      |> element("#add-item-espresso-blend")
-      |> render_click()
+      # The click succeeds without error, confirming session was created
+      html =
+        view
+        |> element("#add-item-espresso-blend")
+        |> render_click()
 
-      # If we get here without error, session was created and item was added
-      assert_redirect(view, "/cart")
+      # Page stays on /products (no redirect) and view is still alive
+      assert has_element?(view, "#product-list")
+      assert html =~ "Espresso Blend"
     end
   end
 
@@ -140,30 +143,33 @@ defmodule EpochWeb.ProductsLiveTest do
   end
 
   describe "add to cart event" do
-    test "clicking add to cart redirects to /cart", %{conn: conn} do
+    test "clicking add to cart stays on same page", %{conn: conn} do
       {:ok, view, _html} = live(conn, ~p"/products")
 
-      view
-      |> element("#add-item-espresso-blend")
-      |> render_click()
+      html =
+        view
+        |> element("#add-item-espresso-blend")
+        |> render_click()
 
-      assert_redirect(view, "/cart")
+      # Page stays on /products - view is still alive and showing products
+      assert has_element?(view, "#product-list")
+      assert html =~ "Espresso Blend"
     end
 
     test "stores item in cart via EventStore", %{conn: conn} do
       {:ok, view, _html} = live(conn, ~p"/products")
 
-      # Click add to cart - the redirect confirms:
+      # Click add to cart - succeeds without error, confirming:
       # 1. Session was created (otherwise add_item would fail)
       # 2. Item was added to cart (otherwise we'd get an error)
-      view
-      |> element("#add-item-french-roast")
-      |> render_click()
+      html =
+        view
+        |> element("#add-item-french-roast")
+        |> render_click()
 
-      # The redirect confirms:
-      # 1. Session was created (otherwise add_item would fail)
-      # 2. Item was added to cart (otherwise we'd get an error)
-      assert_redirect(view, "/cart")
+      # Page stays on /products and view remains functional
+      assert has_element?(view, "#product-list")
+      assert html =~ "French Roast"
     end
   end
 end
