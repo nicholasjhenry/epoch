@@ -13,10 +13,19 @@
         <span class="icon"><i class="fas fa-store"></i></span>
         <span>Products</span>
       </.link>
-      <.link href="/cart" id="nav-cart" class="navbar-item">
+      <.link
+        :if={@cart_session_id}
+        navigate={~p"/cart/#{@cart_session_id}"}
+        id="nav-cart"
+        class="navbar-item"
+      >
         <span class="icon"><i class="fas fa-shopping-cart"></i></span>
         <span>Cart</span>
       </.link>
+      <span :if={!@cart_session_id} id="nav-cart" class="navbar-item">
+        <span class="icon"><i class="fas fa-shopping-cart"></i></span>
+        <span>Cart</span>
+      </span>
       <.link href="/spec" id="nav-spec" class="navbar-item">
         <span class="icon"><i class="fas fa-vial"></i></span>
         <span>Spec</span>

@@ -8,6 +8,7 @@ defmodule EpochWeb.Router do
     plug :put_root_layout, html: {EpochWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug EpochWeb.Plugs.CartSession
   end
 
   pipeline :api do
@@ -20,6 +21,7 @@ defmodule EpochWeb.Router do
     get "/", PageController, :home
     get "/health", HealthCheck, :health
     live "/products", ProductsLive
+    live "/cart/:session_id", CartLive
   end
 
   # Other scopes may use custom stacks.

@@ -1,24 +1,30 @@
 defmodule Epoch.Slices.AddItem.CommandHandler do
   @moduledoc """
   Handles the AddItem command by validating quantity limits
-  and appending an ItemAddedToCart event to the cart stream.
+  and appending an ItemAdded event to the cart stream.
   """
 
   alias Epoch.Cart
-  alias Epoch.Cart.Events.ItemAddedToCart
+  alias Epoch.Cart.Events.ItemAdded
   alias Epoch.Catalog
   alias Epoch.EventStore
   alias Epoch.Slices.AddItem.Command
+
+  @max_items_in_cart 3
 
   def handle(%Command{} = command) do
     {:ok, session} = Cart.get_session(command.session_id)
 
     with {:ok, product} <- Catalog.get_product(command.product_id),
-         :ok <- validate_quantity(session, product) do
-      event = %ItemAddedToCart{
+         :ok <- validate_cart_limit(session) do
+      now = DateTime.utc_now()
+
+      event = %ItemAdded{
+        item_id: "#{command.product_id}-#{DateTime.to_unix(now, :microsecond)}",
         product_id: command.product_id,
-        quantity: command.quantity,
-        added_at: DateTime.utc_now()
+        name: product.name,
+        price: Decimal.to_float(product.price),
+        added_at: now
       }
 
       stream_name = EventStore.stream_name("cart", command.session_id)
@@ -30,15 +36,14 @@ defmodule Epoch.Slices.AddItem.CommandHandler do
     end
   end
 
-  defp validate_quantity(session, product) do
-    current_quantity =
+  defp validate_cart_limit(session) do
+    total_items =
       session.items
-      |> Enum.filter(fn item -> item.product_id == product.product_id end)
       |> Enum.map(& &1.quantity)
       |> Enum.sum()
 
-    if current_quantity + 1 > 3 do
-      {:error, :quantity_exceed}
+    if total_items >= @max_items_in_cart do
+      {:error, :cart_limit_exceeded}
     else
       :ok
     end

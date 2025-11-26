@@ -6,7 +6,7 @@ defmodule Epoch.Cart.CartSession do
   Stream name format: "cart-{session_id}"
   """
 
-  alias Epoch.Cart.Events.{CartCreated, ItemAddedToCart}
+  alias Epoch.Cart.Events.{CartCreated, ItemAdded}
 
   @type cart_item :: %{
           product_id: String.t(),
@@ -24,13 +24,14 @@ defmodule Epoch.Cart.CartSession do
   @doc """
   Evolves cart state by applying an event.
   """
-  @spec evolve(t(), CartCreated.t() | ItemAddedToCart.t()) :: t()
+  @spec evolve(t(), CartCreated.t() | ItemAdded.t()) :: t()
   def evolve(state, %CartCreated{session_id: id, created_at: at}) do
     %{state | session_id: id, created_at: at}
   end
 
-  def evolve(state, %ItemAddedToCart{product_id: pid, quantity: qty}) do
-    updated_items = add_or_update_item(state.items, pid, qty)
+  def evolve(state, %ItemAdded{product_id: pid}) do
+    # Each ItemAdded event represents a single item (quantity=1)
+    updated_items = add_or_update_item(state.items, pid, 1)
     %{state | items: updated_items}
   end
 
