@@ -13,7 +13,7 @@ defmodule Epoch.Slices.AddItem.CommandHandler do
   @max_items_in_cart 3
 
   def handle(%Command{} = command) do
-    {:ok, session} = Cart.get_session(command.session_id)
+    {:ok, session} = get_or_create_session(command.session_id)
 
     with {:ok, product} <- Catalog.get_product(command.product_id),
          :ok <- validate_cart_limit(session) do
@@ -33,6 +33,13 @@ defmodule Epoch.Slices.AddItem.CommandHandler do
         {:ok, _} -> Cart.get_session(command.session_id)
         {:error, _} = error -> error
       end
+    end
+  end
+
+  defp get_or_create_session(session_id) do
+    case Cart.get_session(session_id) do
+      {:ok, session} -> {:ok, session}
+      {:error, :not_found} -> Cart.create_session(session_id)
     end
   end
 
