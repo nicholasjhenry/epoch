@@ -10,14 +10,21 @@ defmodule EpochWeb.ProductsLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    session_id = Ecto.UUID.generate()
-    Epoch.Cart.create_session(session_id)
     products = Catalog.list_products()
 
-    {:ok,
-     socket
-     |> assign(:products, products)
-     |> assign(:cart_session_id, session_id)}
+    socket =
+      if connected?(socket) do
+        session_id = Ecto.UUID.generate()
+        Epoch.Cart.create_session(session_id)
+
+        socket
+        |> assign(:cart_session_id, session_id)
+      else
+        socket
+        |> assign(:cart_session_id, nil)
+      end
+
+    {:ok, assign(socket, :products, products)}
   end
 
   @impl true

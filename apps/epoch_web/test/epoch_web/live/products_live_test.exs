@@ -3,7 +3,37 @@ defmodule EpochWeb.ProductsLiveTest do
 
   import Phoenix.LiveViewTest
 
+  defp count_all_cart_created_events do
+    # Get all events from EventStore and count CartCreated events
+    {:ok, %{events: events}} = Epoch.EventStore.read_all_events(page_size: 100)
+
+    # Events are wrapped in a map with :event key
+    Enum.count(events, fn %{event: event} ->
+      match?(%Epoch.Cart.Events.CartCreated{}, event)
+    end)
+  end
+
   describe "ProductsLive mount" do
+    test "does not create orphaned cart sessions (only creates cart on connected mount)", %{
+      conn: conn
+    } do
+      # LiveView mount is called twice: once disconnected (HTTP), once connected (WebSocket).
+      # If we create a cart on disconnected mount with a new UUID, it gets orphaned when
+      # connected mount generates a different UUID. We should only create cart when connected.
+
+      # Count total CartCreated events before and after mounting
+      initial_cart_count = count_all_cart_created_events()
+
+      {:ok, _view, _html} = live(conn, ~p"/products")
+
+      final_cart_count = count_all_cart_created_events()
+
+      # Should only create ONE cart session total (on connected mount only)
+      assert final_cart_count - initial_cart_count == 1,
+             "Expected 1 new cart session but found #{final_cart_count - initial_cart_count}. " <>
+               "An orphaned cart may have been created on disconnected mount."
+    end
+
     test "loads products on mount - verified by rendering all 5 products", %{conn: conn} do
       {:ok, view, _html} = live(conn, ~p"/products")
 
