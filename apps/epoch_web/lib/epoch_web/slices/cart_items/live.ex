@@ -42,6 +42,7 @@ defmodule Epoch.Slices.CartItems.Live do
               <tr>
                 <th>Product</th>
                 <th>Price</th>
+                <th>Inventory</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -49,6 +50,12 @@ defmodule Epoch.Slices.CartItems.Live do
               <tr :for={item <- @cart_items} id={"cart-item-#{item.item_id}"}>
                 <td id={"cart-item-name-#{item.item_id}"}>{item.name}</td>
                 <td id={"cart-item-price-#{item.item_id}"}>{format_price(item.price)}</td>
+                <td>
+                  {live_render(@socket, Epoch.Slices.CartItemInventory.Live,
+                    id: "inventory-live-#{item.product_id}",
+                    session: %{"product_id" => item.product_id}
+                  )}
+                </td>
                 <td>
                   <.live_component
                     module={Epoch.Slices.RemoveItem.Component}
@@ -64,6 +71,7 @@ defmodule Epoch.Slices.CartItems.Live do
               <tr>
                 <th class="has-text-right">Total:</th>
                 <th id="cart-total">{format_price(@cart_total)}</th>
+                <th></th>
                 <th></th>
               </tr>
             </tfoot>
