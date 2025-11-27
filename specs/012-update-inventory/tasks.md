@@ -28,9 +28,9 @@
 
 **Skills**: None required (file system operations only)
 
-- [ ] T001 Create backoffice directories: `apps/epoch/lib/epoch/backoffice/` and `apps/epoch/lib/epoch/backoffice/events/`
-- [ ] T002 [P] Create test directory: `apps/epoch/test/epoch/backoffice/`
-- [ ] T003 [P] Create LiveView directories: `apps/epoch_web/lib/epoch_web/live/backoffice/` and `apps/epoch_web/test/epoch_web/live/backoffice/`
+- [x] T001 Create backoffice directories: `apps/epoch/lib/epoch/backoffice/` and `apps/epoch/lib/epoch/backoffice/events/`
+- [x] T002 [P] Create test directory: `apps/epoch/test/epoch/backoffice/`
+- [x] T003 [P] Create LiveView directories: `apps/epoch_web/lib/epoch_web/live/backoffice/` and `apps/epoch_web/test/epoch_web/live/backoffice/`
 
 ---
 
@@ -42,10 +42,10 @@
 
 **CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T004 Create InventoryUpdated event struct with typespec in `apps/epoch/lib/epoch/backoffice/events/inventory_updated.ex`
+- [x] T004 Create InventoryUpdated event struct with typespec in `apps/epoch/lib/epoch/backoffice/events/inventory_updated.ex`
   - **Skill**: `elixir-core`, `elixir-typespec`
   - Fields: product_id (String.t()), quantity (non_neg_integer()), updated_at (DateTime.t())
-- [ ] T005 [P] Create InventoryState aggregate with evolve/2 function in `apps/epoch/lib/epoch/backoffice/inventory_state.ex`
+- [x] T005 [P] Create InventoryState aggregate with evolve/2 function in `apps/epoch/lib/epoch/backoffice/inventory_state.ex`
   - **Skill**: `elixir-core`, `elixir-typespec`
   - Initial state with quantity: 0
   - evolve/2 to apply InventoryUpdated events
@@ -66,7 +66,7 @@
 
 **Skills**: `elixir-testing`, `phoenix-liveview` (for LiveView tests)
 
-- [ ] T006 [P] [US1] Unit tests for Inventory context in `apps/epoch/test/epoch/backoffice/inventory_test.exs`
+- [x] T006 [P] [US1] Unit tests for Inventory context in `apps/epoch/test/epoch/backoffice/inventory_test.exs`
   - **Skill**: `elixir-testing`
   - Test update_quantity/2 success with valid product
   - Test update_quantity/2 to 0 succeeds (out of stock)
@@ -76,11 +76,11 @@
   - Test get_quantity/1 for product with existing inventory
   - Test get_quantity/1 for product without inventory returns 0
   - Test get_state/1 returns full InventoryState
-- [ ] T007 [P] [US1] Integration tests for event persistence in `apps/epoch/test/epoch/backoffice/inventory_test.exs`
+- [x] T007 [P] [US1] Integration tests for event persistence in `apps/epoch/test/epoch/backoffice/inventory_test.exs`
   - **Skill**: `elixir-testing`
   - Test events are persisted to EventStore stream "inventory-{product_id}"
   - Test state is recovered after reading events from stream
-- [ ] T008 [P] [US1] LiveView tests in `apps/epoch_web/test/epoch_web/live/backoffice/inventory_live_test.exs`
+- [x] T008 [P] [US1] LiveView tests in `apps/epoch_web/test/epoch_web/live/backoffice/inventory_live_test.exs`
   - **Skill**: `elixir-testing`, `phoenix-liveview`
   - Test form renders with product_id and quantity fields
   - Test successful form submission shows success message
@@ -91,17 +91,17 @@
 
 **Skills**: `phoenix-contexts`, `elixir-core`, `phoenix-liveview`, `phoenix-html`, `phoenix`
 
-- [ ] T009 [US1] Implement Inventory context module in `apps/epoch/lib/epoch/backoffice/inventory.ex`
+- [x] T009 [US1] Implement Inventory context module in `apps/epoch/lib/epoch/backoffice/inventory.ex`
   - **Skill**: `phoenix-contexts`, `elixir-core`
   - update_quantity/2: validate product exists via Catalog.get_product/1, validate quantity >= 0, create event, append to stream, return state
   - get_quantity/1: read stream, fold events, return quantity (default 0)
   - get_state/1: read stream, fold events with InventoryState.evolve/2
-- [ ] T010 [US1] Implement InventoryLive in `apps/epoch_web/lib/epoch_web/live/backoffice/inventory_live.ex`
+- [x] T010 [US1] Implement InventoryLive in `apps/epoch_web/lib/epoch_web/live/backoffice/inventory_live.ex`
   - **Skill**: `phoenix-liveview`, `phoenix-html`
   - mount/3: initialize form with to_form/2
   - handle_event "save": parse quantity, call Inventory.update_quantity/2, assign result
   - render/1: form with product_id text input, quantity number input, submit button, result display
-- [ ] T011 [US1] Add route to router in `apps/epoch_web/lib/epoch_web/router.ex`
+- [x] T011 [US1] Add route to router in `apps/epoch_web/lib/epoch_web/router.ex`
   - **Skill**: `phoenix`
   - Add `live "/backoffice/inventory", Backoffice.InventoryLive` in browser scope
 
@@ -115,13 +115,13 @@
 
 **Skills**: `elixir-core`, `elixir-testing`
 
-- [ ] T012 [P] Add logging for inventory operations in `apps/epoch/lib/epoch/backoffice/inventory.ex`
+- [x] T012 [P] Add logging for inventory operations in `apps/epoch/lib/epoch/backoffice/inventory.ex`
   - **Skill**: `elixir-core`
   - Log product_id, old quantity, new quantity on updates
   - Log errors with appropriate level
-- [ ] T013 Run quickstart.md validation: verify all IEx examples work as documented
+- [x] T013 Run quickstart.md validation: verify all IEx examples work as documented
   - **Skill**: None (manual verification)
-- [ ] T014 Run full test suite: `mix test apps/epoch/test/epoch/backoffice/ apps/epoch_web/test/epoch_web/live/backoffice/`
+- [x] T014 Run full test suite: `mix test apps/epoch/test/epoch/backoffice/ apps/epoch_web/test/epoch_web/live/backoffice/`
   - **Skill**: `elixir-testing`
 
 ---

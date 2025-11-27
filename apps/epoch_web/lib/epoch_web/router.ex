@@ -22,6 +22,7 @@ defmodule EpochWeb.Router do
     get "/health", HealthCheck, :health
     live "/products", ProductsLive
     live "/cart/:session_id", CartLive
+    live "/backoffice/inventory", Backoffice.InventoryLive
   end
 
   # Other scopes may use custom stacks.
