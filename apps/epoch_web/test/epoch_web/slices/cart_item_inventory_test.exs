@@ -68,14 +68,13 @@ defmodule Epoch.Slices.CartItemInventoryTest do
       assert render(view) =~ "Out of stock"
     end
 
-    test "given no inventory events then shows unknown", %{
+    test "given no inventory events then shows out of stock (initial state is zero)", %{
       conn: conn,
       session_id: session_id,
       product_id: _product_id
     } do
-      # Don't set any inventory - product has no inventory events
       # The inventory system returns 0 for non-existent streams (initial state)
-      # We need a product that truly has no inventory tracking
+      # The "Unknown" state is reserved for when inventory fetch fails
 
       # Use a different product that has no inventory stream
       now = DateTime.utc_now()
@@ -95,9 +94,9 @@ defmodule Epoch.Slices.CartItemInventoryTest do
       # Visit cart page
       {:ok, view, _html} = live(conn, ~p"/cart/#{session_id}")
 
-      # Initial state (0) should show as "Out of stock" (not "Unknown")
-      # The "Unknown" state is for when inventory fetch fails
+      # Initial state (0) shows as "Out of stock"
       assert has_element?(view, "#inventory-#{new_product_id}")
+      assert render(view) =~ "Out of stock"
     end
   end
 

@@ -15,7 +15,7 @@ defmodule EpochWeb.Backoffice.InventoryLive do
      |> assign(:result, nil)}
   end
 
-  def handle_event("save", %{"product_id" => product_id, "quantity" => qty_str}, socket) do
+  def handle_event("save", %{"product_id" => product_id, "quantity" => qty_str} = params, socket) do
     result =
       case Integer.parse(qty_str) do
         {quantity, ""} ->
@@ -25,7 +25,13 @@ defmodule EpochWeb.Backoffice.InventoryLive do
           {:error, :invalid_quantity}
       end
 
-    {:noreply, assign(socket, result: result)}
+    # Preserve form state on error
+    form = to_form(params)
+
+    {:noreply,
+     socket
+     |> assign(:form, form)
+     |> assign(:result, result)}
   end
 
   def render(assigns) do
@@ -43,7 +49,11 @@ defmodule EpochWeb.Backoffice.InventoryLive do
             required
           >
             <option value="">Select a product...</option>
-            <option :for={product <- @products} value={product.product_id}>
+            <option
+              :for={product <- @products}
+              value={product.product_id}
+              selected={@form[:product_id].value == product.product_id}
+            >
               {product.name} ({product.product_id})
             </option>
           </select>
