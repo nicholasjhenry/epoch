@@ -12,11 +12,41 @@ description: "Task list template for feature implementation"
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
 
-## Format: `[ID] [P?] [Story] Description`
+## Format: `[ID] [P?] [Story] Description | Skills: [skill-list]`
 
 - **[P]**: Can run in parallel (different files, no dependencies)
 - **[Story]**: Which user story this task belongs to (e.g., US1, US2, US3)
+- **Skills**: Agent skills to invoke before implementing this task
 - Include exact file paths in descriptions
+
+<!--
+  ============================================================================
+  AGENT INSTRUCTIONS: Skill Assignment (AUTOMATIC)
+  
+  For each task, assign skills by reading `tmp/claude-code/skills/*/SKILL.md` 
+  frontmatter and matching:
+
+  1. **File path patterns** (`patterns.files`): Match task file path against 
+     skill file globs
+  2. **Keywords** (`patterns.keywords`): Match task description against skill 
+     keywords  
+  3. **Default**: Include `elixir-core` as baseline for all `.ex` files
+
+  **Output format**: Append skills after description: `| Skills: skill1, skill2`
+
+  **Example skill patterns** (from skill frontmatter):
+  - `elixir-testing`: files `*_test.exs`, keywords `test`, `Unit test`
+  - `phoenix-liveview`: files `*_live.ex`, keywords `LiveView`, `mount`
+  - `phoenix-html`: files `*.html.heex`, keywords `render`, `template`, `form`
+  - `ecto`: files `**/schemas/*.ex`, keywords `schema`, `changeset`, `Repo`
+  - `elixir-otp`: keywords `GenServer`, `PubSub`, `subscribe`, `handle_info`
+
+  **Combination rules**:
+  - LiveView tests: `elixir-testing, phoenix-liveview`
+  - LiveView with forms: `phoenix-liveview, phoenix-html`
+  - Context with Ecto: `phoenix-contexts, ecto`
+  ============================================================================
+-->
 
 ## Path Conventions
 
@@ -244,6 +274,7 @@ With multiple developers:
 
 - [P] tasks = different files, no dependencies
 - [Story] label maps task to specific user story for traceability
+- Skills listed after `|` indicate which agent skills to invoke for that task
 - Each user story should be independently completable and testable
 - Verify tests fail before implementing
 - Commit after each task or logical group
