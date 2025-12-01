@@ -2,13 +2,20 @@ defmodule EpochWeb.Backoffice.InventoryLive do
   use EpochWeb, :live_view
 
   alias Epoch.Backoffice.Inventory
+  alias Epoch.Catalog
 
   def mount(_params, _session, socket) do
+    products = Catalog.list_products()
     form = to_form(%{"product_id" => "", "quantity" => ""})
-    {:ok, assign(socket, form: form, result: nil)}
+
+    {:ok,
+     socket
+     |> assign(:form, form)
+     |> assign(:products, products)
+     |> assign(:result, nil)}
   end
 
-  def handle_event("save", %{"product_id" => product_id, "quantity" => qty_str}, socket) do
+  def handle_event("save", %{"product_id" => product_id, "quantity" => qty_str} = params, socket) do
     result =
       case Integer.parse(qty_str) do
         {quantity, ""} ->
@@ -18,7 +25,13 @@ defmodule EpochWeb.Backoffice.InventoryLive do
           {:error, :invalid_quantity}
       end
 
-    {:noreply, assign(socket, result: result)}
+    # Preserve form state on error
+    form = to_form(params)
+
+    {:noreply,
+     socket
+     |> assign(:form, form)
+     |> assign(:result, result)}
   end
 
   def render(assigns) do
@@ -28,16 +41,22 @@ defmodule EpochWeb.Backoffice.InventoryLive do
 
       <.form for={@form} phx-submit="save" id="inventory-form" class="space-y-4">
         <div>
-          <label for="product_id" class="block text-sm font-medium mb-1">Product ID</label>
-          <input
-            type="text"
+          <label for="product_id" class="block text-sm font-medium mb-1">Product</label>
+          <select
             name="product_id"
             id="product_id"
-            value={@form[:product_id].value}
             class="w-full px-3 py-2 border rounded-md"
-            placeholder="e.g., espresso-blend"
             required
-          />
+          >
+            <option value="">Select a product...</option>
+            <option
+              :for={product <- @products}
+              value={product.product_id}
+              selected={@form[:product_id].value == product.product_id}
+            >
+              {product.name} ({product.product_id})
+            </option>
+          </select>
         </div>
 
         <div>

@@ -13,6 +13,7 @@ defmodule Epoch.Cart.CartItemsView do
 
   @type cart_item :: %{
           item_id: String.t(),
+          product_id: String.t(),
           name: String.t(),
           price: float()
         }
@@ -39,8 +40,8 @@ defmodule Epoch.Cart.CartItemsView do
   Applies a single event to the current state, returning updated state.
   """
   @spec evolve(state(), struct()) :: state()
-  def evolve(state, %ItemAdded{item_id: id, name: name, price: price}) do
-    item = %{item_id: id, name: name, price: price}
+  def evolve(state, %ItemAdded{item_id: id, product_id: product_id, name: name, price: price}) do
+    item = %{item_id: id, product_id: product_id, name: name, price: price}
     %{state | items: state.items ++ [item], total: state.total + price}
   end
 
