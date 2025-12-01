@@ -20,6 +20,7 @@ defmodule Epoch.Slices.AddItem.CommandHandler do
       now = DateTime.utc_now()
 
       event = %ItemAdded{
+        cart_id: command.session_id,
         item_id: "#{command.product_id}-#{DateTime.to_unix(now, :microsecond)}",
         product_id: command.product_id,
         name: product.name,

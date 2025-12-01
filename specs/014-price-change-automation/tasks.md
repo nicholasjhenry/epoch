@@ -29,10 +29,10 @@
 
 **Purpose**: Event definitions and base infrastructure for all user stories
 
-- [ ] T001 [P] Create PriceChanged event struct in apps/epoch/lib/epoch/backoffice/events/price_changed.ex | Skills: elixir-core
-- [ ] T002 [P] Create ItemArchiveRequested event struct in apps/epoch/lib/epoch/cart/events/item_archive_requested.ex | Skills: elixir-core
-- [ ] T003 [P] Extend ItemArchived event with cart_id and reason fields in apps/epoch/lib/epoch/cart/events/item_archived.ex | Skills: elixir-core
-- [ ] T004 [P] Add cart_id field to ItemAdded event in apps/epoch/lib/epoch/cart/events/item_added.ex | Skills: elixir-core
+- [X] T001 [P] Create PriceChanged event struct in apps/epoch/lib/epoch/backoffice/events/price_changed.ex | Skills: elixir-core
+- [X] T002 [P] Create ItemArchiveRequested event struct in apps/epoch/lib/epoch/cart/events/item_archive_requested.ex | Skills: elixir-core
+- [X] T003 [P] Extend ItemArchived event with cart_id and reason fields in apps/epoch/lib/epoch/cart/events/item_archived.ex | Skills: elixir-core
+- [X] T004 [P] Add cart_id field to ItemAdded event in apps/epoch/lib/epoch/cart/events/item_added.ex | Skills: elixir-core
 
 ---
 
@@ -44,15 +44,15 @@
 
 ### Read Model Infrastructure
 
-- [ ] T005 [P] Create CartsWithProducts read model in apps/epoch/lib/epoch/cart/carts_with_products.ex | Skills: elixir-core
-- [ ] T006 [P] Create ItemsToArchive read model (TODO list) in apps/epoch/lib/epoch/cart/items_to_archive.ex | Skills: elixir-core
-- [ ] T007 [P] Create ProductsWithPriceChanges read model in apps/epoch/lib/epoch/backoffice/products_with_price_changes.ex | Skills: elixir-core
+- [X] T005 [P] Create CartsWithProducts read model in apps/epoch/lib/epoch/cart/carts_with_products.ex | Skills: elixir-core
+- [X] T006 [P] Create ItemsToArchive read model (TODO list) in apps/epoch/lib/epoch/cart/items_to_archive.ex | Skills: elixir-core
+- [X] T007 [P] Create ProductsWithPriceChanges read model in apps/epoch/lib/epoch/backoffice/products_with_price_changes.ex | Skills: elixir-core
 
 ### Command Slices
 
-- [ ] T008 [P] Create ChangePrice command struct in apps/epoch_web/lib/epoch_web/slices/change_price/command.ex | Skills: elixir-core
-- [ ] T009 [P] Create RequestToArchiveItem command struct in apps/epoch_web/lib/epoch_web/slices/request_to_archive_item/command.ex | Skills: elixir-core
-- [ ] T010 [P] Create ArchiveItem command struct in apps/epoch_web/lib/epoch_web/slices/archive_item/command.ex | Skills: elixir-core
+- [X] T008 [P] Create ChangePrice command struct in apps/epoch_web/lib/epoch_web/slices/change_price/command.ex | Skills: elixir-core
+- [X] T009 [P] Create RequestToArchiveItem command struct in apps/epoch_web/lib/epoch_web/slices/request_to_archive_item/command.ex | Skills: elixir-core
+- [X] T010 [P] Create ArchiveItem command struct in apps/epoch_web/lib/epoch_web/slices/archive_item/command.ex | Skills: elixir-core
 
 **Checkpoint**: Foundation ready - all events, read models, and command structs defined
 
@@ -66,17 +66,17 @@
 
 ### Tests for User Story 1 (MANDATORY - write these first) ⚠️
 
-- [ ] T011 [P] [US1] Unit test ChangePrice command handler emits PriceChanged event in apps/epoch_web/test/epoch_web/slices/change_price_test.exs | Skills: elixir-testing
-- [ ] T012 [P] [US1] Unit test ChangePrice validates product exists in Catalog in apps/epoch_web/test/epoch_web/slices/change_price_test.exs | Skills: elixir-testing
-- [ ] T013 [P] [US1] Unit test ChangePrice rejects invalid prices (<=0) in apps/epoch_web/test/epoch_web/slices/change_price_test.exs | Skills: elixir-testing
-- [ ] T014 [P] [US1] LiveView test for price change form submission in apps/epoch_web/test/epoch_web/live/backoffice/inventory_live_test.exs | Skills: elixir-testing, phoenix-liveview
+- [X] T011 [P] [US1] Unit test ChangePrice command handler emits PriceChanged event in apps/epoch_web/test/epoch_web/slices/change_price_test.exs | Skills: elixir-testing
+- [X] T012 [P] [US1] Unit test ChangePrice validates product exists in Catalog in apps/epoch_web/test/epoch_web/slices/change_price_test.exs | Skills: elixir-testing
+- [X] T013 [P] [US1] Unit test ChangePrice rejects invalid prices (<=0) in apps/epoch_web/test/epoch_web/slices/change_price_test.exs | Skills: elixir-testing
+- [X] T014 [P] [US1] LiveView test for price change form submission in apps/epoch_web/test/epoch_web/live/backoffice/inventory_live_test.exs | Skills: elixir-testing, phoenix-liveview
 
 ### Implementation for User Story 1
 
-- [ ] T015 [US1] Implement ChangePrice command handler in apps/epoch_web/lib/epoch_web/slices/change_price/command_handler.ex | Skills: elixir-core
-- [ ] T016 [US1] Create Epoch.Backoffice.Price context with change_price/1 function in apps/epoch/lib/epoch/backoffice/price.ex | Skills: elixir-core, phoenix-contexts
-- [ ] T017 [US1] Extend InventoryLive with price change form in apps/epoch_web/lib/epoch_web/live/backoffice/inventory_live.ex | Skills: phoenix-liveview, phoenix-html
-- [ ] T018 [US1] Add handle_event for "change_price" in InventoryLive in apps/epoch_web/lib/epoch_web/live/backoffice/inventory_live.ex | Skills: phoenix-liveview
+- [X] T015 [US1] Implement ChangePrice command handler in apps/epoch_web/lib/epoch_web/slices/change_price/command_handler.ex | Skills: elixir-core
+- [X] T016 [US1] Create Epoch.Backoffice.Price context with change_price/1 function in apps/epoch/lib/epoch/backoffice/price.ex | Skills: elixir-core, phoenix-contexts
+- [X] T017 [US1] Extend InventoryLive with price change form in apps/epoch_web/lib/epoch_web/live/backoffice/inventory_live.ex | Skills: phoenix-liveview, phoenix-html
+- [X] T018 [US1] Add handle_event for "change_price" in InventoryLive in apps/epoch_web/lib/epoch_web/live/backoffice/inventory_live.ex | Skills: phoenix-liveview
 
 **Checkpoint**: Administrators can change product prices from backoffice UI → PriceChanged event emitted to price stream
 

@@ -11,7 +11,11 @@ defmodule Epoch.Application do
       Epoch.Repo,
       {DNSCluster, query: Application.get_env(:epoch, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Epoch.PubSub},
-      Epoch.EventStore
+      Epoch.EventStore,
+      # Price change automation - requests archiving of cart items when prices change
+      Epoch.Automation.PriceChangeProcessor,
+      # Archive processor - processes pending archive requests
+      Epoch.Automation.ArchiveProcessor
     ]
 
     Supervisor.start_link(children, strategy: :one_for_one, name: Epoch.Supervisor)
