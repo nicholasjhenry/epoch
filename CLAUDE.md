@@ -470,6 +470,8 @@ And **never** do this:
 - Elixir 1.19.2 / OTP 28.1.1 (requirement: ~> 1.15) + Phoenix 1.8.1, Phoenix LiveView 1.1.17, Phoenix PubSub 2.1 (009-display-cart-items)
 - In-memory EventStore (GenServer-based); events persisted to streams (012-update-inventory)
 - In-memory EventStore (GenServer-based) for inventory events; stream format `inventory-{product_id}` (013-cart-item-inventory)
+- Elixir 1.19.2 / OTP 28.1.1 (requirement: ~> 1.15) + Phoenix 1.8.1, Phoenix LiveView 1.1.17, Phoenix PubSub 2.1, Jason 1.2 (014-price-change-automation)
+- In-memory EventStore (GenServer-based); PostgreSQL via Ecto.Repo available for future persistence (014-price-change-automation)
 
 ## Recent Changes
 - 001-elixir-event-store: Added Elixir ~> 1.15 + None (pure Elixir/OTP implementation)

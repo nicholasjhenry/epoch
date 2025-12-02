@@ -20,6 +20,14 @@ defmodule EpochWeb.Backoffice.InventoryLiveTest do
       # Verify dropdown contains products
       assert has_element?(view, "option[value='espresso-blend']")
     end
+
+    test "renders price change form", %{conn: conn} do
+      {:ok, view, _html} = live(conn, ~p"/backoffice/inventory")
+
+      assert has_element?(view, "#price-form")
+      assert has_element?(view, "select#price_product_id")
+      assert has_element?(view, "input[name='new_price']")
+    end
   end
 
   describe "submitting inventory form" do
@@ -66,6 +74,43 @@ defmodule EpochWeb.Backoffice.InventoryLiveTest do
       html =
         view
         |> form("#inventory-form", %{product_id: "espresso-blend", quantity: "abc"})
+        |> render_submit()
+
+      assert html =~ "Invalid" or html =~ "Error"
+    end
+  end
+
+  describe "submitting price change form" do
+    test "shows success message for valid price change", %{conn: conn} do
+      {:ok, view, _html} = live(conn, ~p"/backoffice/inventory")
+
+      html =
+        view
+        |> form("#price-form", %{product_id: "espresso-blend", new_price: "15.99"})
+        |> render_submit()
+
+      assert html =~ "Price updated"
+      assert html =~ "espresso-blend"
+      assert html =~ "15.99"
+    end
+
+    test "shows error for empty product selection", %{conn: conn} do
+      {:ok, view, _html} = live(conn, ~p"/backoffice/inventory")
+
+      html =
+        view
+        |> form("#price-form", %{product_id: "", new_price: "15.99"})
+        |> render_submit()
+
+      assert html =~ "not found" or html =~ "Error"
+    end
+
+    test "shows error for invalid price", %{conn: conn} do
+      {:ok, view, _html} = live(conn, ~p"/backoffice/inventory")
+
+      html =
+        view
+        |> form("#price-form", %{product_id: "espresso-blend", new_price: "abc"})
         |> render_submit()
 
       assert html =~ "Invalid" or html =~ "Error"

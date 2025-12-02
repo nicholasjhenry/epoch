@@ -7,7 +7,7 @@ defmodule Epoch.Cart do
 
   alias Epoch.Cart.CartItemsView
   alias Epoch.Cart.CartSession
-  alias Epoch.Cart.Events.{CartCreated, ItemAdded}
+  alias Epoch.Cart.Events.{CartCreated, ItemAdded, ItemArchived, ItemArchiveRequested}
   alias Epoch.Catalog
   alias Epoch.EventStore
 
@@ -43,6 +43,7 @@ defmodule Epoch.Cart do
       now = DateTime.utc_now()
 
       event = %ItemAdded{
+        cart_id: session_id,
         item_id: "#{product_id}-#{DateTime.to_unix(now, :microsecond)}",
         product_id: product_id,
         name: product.name,
@@ -98,6 +99,82 @@ defmodule Epoch.Cart do
       )
 
     {:ok, state}
+  end
+
+  @doc """
+  Requests that a cart item be archived.
+
+  Emits an ItemArchiveRequested event to the cart stream.
+  Checks for idempotency - returns error if archive already requested.
+  """
+  @spec request_item_archive(map()) :: {:ok, ItemArchiveRequested.t()} | {:error, atom()}
+  def request_item_archive(%{
+        cart_id: cart_id,
+        product_id: product_id,
+        item_id: item_id,
+        reason: reason
+      }) do
+    stream_name = stream_name(cart_id)
+
+    # Check if archive already requested for this item
+    {:ok, %{events: events}} = EventStore.read_stream(stream_name)
+
+    already_requested =
+      Enum.any?(events, fn e ->
+        e.__struct__ == ItemArchiveRequested and e.item_id == item_id
+      end)
+
+    if already_requested do
+      {:error, :already_requested}
+    else
+      event = %ItemArchiveRequested{
+        cart_id: cart_id,
+        product_id: product_id,
+        item_id: item_id,
+        reason: reason || "price_changed",
+        requested_at: DateTime.utc_now()
+      }
+
+      case EventStore.append_to_stream(stream_name, [event]) do
+        {:ok, _} -> {:ok, event}
+        {:error, _} = error -> error
+      end
+    end
+  end
+
+  @doc """
+  Archives a cart item.
+
+  Emits an ItemArchived event to the cart stream.
+  Checks for idempotency - returns error if item already archived.
+  """
+  @spec archive_item(map()) :: {:ok, ItemArchived.t()} | {:error, atom()}
+  def archive_item(%{cart_id: cart_id, item_id: item_id, reason: reason}) do
+    stream_name = stream_name(cart_id)
+
+    # Check if item already archived
+    {:ok, %{events: events}} = EventStore.read_stream(stream_name)
+
+    already_archived =
+      Enum.any?(events, fn e ->
+        e.__struct__ == ItemArchived and e.item_id == item_id
+      end)
+
+    if already_archived do
+      {:error, :already_archived}
+    else
+      event = %ItemArchived{
+        cart_id: cart_id,
+        item_id: item_id,
+        reason: reason || "price_changed",
+        archived_at: DateTime.utc_now()
+      }
+
+      case EventStore.append_to_stream(stream_name, [event]) do
+        {:ok, _} -> {:ok, event}
+        {:error, _} = error -> error
+      end
+    end
   end
 
   defp stream_name(session_id), do: "cart-#{session_id}"
