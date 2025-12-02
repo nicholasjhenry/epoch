@@ -30,6 +30,7 @@ defmodule Epoch.Slices.CartItems.Live do
   def render(assigns) do
     ~H"""
     <div id="cart-items-container">
+      <.flash id="flash-info-cart-items" kind={:info} flash={@flash} />
       <.flash id="flash-error-cart-items" kind={:error} flash={@flash} />
       <%= if @cart_empty? do %>
         <div id="cart-empty" class="notification is-light">
@@ -84,6 +85,13 @@ defmodule Epoch.Slices.CartItems.Live do
               <.live_component
                 module={Epoch.Slices.ClearCart.Component}
                 id="clear-cart-component"
+                cart_session_id={@cart_session_id}
+              />
+            </div>
+            <div class="level-item">
+              <.live_component
+                module={Epoch.Slices.SubmitCart.Component}
+                id="submit-cart-component"
                 cart_session_id={@cart_session_id}
               />
             </div>
