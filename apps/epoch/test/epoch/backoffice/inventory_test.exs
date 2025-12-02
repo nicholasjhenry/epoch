@@ -75,16 +75,25 @@ defmodule Epoch.Backoffice.InventoryTest do
 
   describe "event persistence" do
     test "events are persisted to EventStore stream" do
-      # Use french-roast to avoid collision with other tests
-      {:ok, _} = Inventory.update_quantity("french-roast", 100)
+      # Use french-roast which exists in catalog but isn't used in other tests in this file
+      product_id = "french-roast"
 
-      # Read events directly from the stream
-      stream = Epoch.EventStore.stream_name("inventory", "french-roast")
-      {:ok, %{events: events}} = Epoch.EventStore.read_stream(stream)
+      # Read current event count before update
+      stream = Epoch.EventStore.stream_name("inventory", product_id)
+      {:ok, %{events: events_before}} = Epoch.EventStore.read_stream(stream)
+      count_before = length(events_before)
 
-      assert length(events) == 1
-      [event] = events
-      assert event.product_id == "french-roast"
+      {:ok, _} = Inventory.update_quantity(product_id, 100)
+
+      # Read events after update
+      {:ok, %{events: events_after}} = Epoch.EventStore.read_stream(stream)
+
+      # Verify exactly one new event was added
+      assert length(events_after) == count_before + 1
+
+      # Get the newly added event (last in the list)
+      event = List.last(events_after)
+      assert event.product_id == product_id
       assert event.quantity == 100
     end
 

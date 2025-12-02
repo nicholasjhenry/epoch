@@ -2,7 +2,15 @@ defmodule Epoch.Cart.CartSessionTest do
   use ExUnit.Case, async: true
 
   alias Epoch.Cart.CartSession
-  alias Epoch.Cart.Events.{CartCleared, CartCreated, ItemAdded, ItemArchived, ItemRemoved}
+
+  alias Epoch.Cart.Events.{
+    CartCleared,
+    CartCreated,
+    CartSubmitted,
+    ItemAdded,
+    ItemArchived,
+    ItemRemoved
+  }
 
   describe "evolve/2 with CartCreated" do
     test "sets session_id and created_at" do
@@ -146,6 +154,62 @@ defmodule Epoch.Cart.CartSessionTest do
       assert new_state.items == []
       assert new_state.session_id == nil
       assert new_state.created_at == nil
+    end
+  end
+
+  describe "evolve/2 with CartSubmitted" do
+    test "resets cart to initial state" do
+      state = %CartSession{
+        session_id: "session-123",
+        items: [
+          %{product_id: "colombian-supremo", quantity: 2},
+          %{product_id: "espresso-blend", quantity: 1}
+        ],
+        created_at: DateTime.utc_now()
+      }
+
+      event = %CartSubmitted{cart_id: "session-123", submitted_at: DateTime.utc_now()}
+
+      new_state = CartSession.evolve(state, event)
+
+      assert new_state.items == []
+      assert new_state.session_id == nil
+      assert new_state.created_at == nil
+    end
+
+    test "allows adding items after submission" do
+      # This test prevents regression of FunctionClauseError when adding items
+      # after cart submission. The bug occurred because CartSession.evolve/2
+      # was missing a handler for CartSubmitted events.
+      initial_state = %CartSession{}
+      now = DateTime.utc_now()
+
+      events = [
+        %CartCreated{session_id: "session-123", created_at: now},
+        %ItemAdded{
+          item_id: "colombian-supremo-1000",
+          product_id: "colombian-supremo",
+          name: "Colombian Supremo",
+          price: 14.99,
+          added_at: now
+        },
+        %CartSubmitted{cart_id: "session-123", submitted_at: now},
+        %CartCreated{session_id: "session-123", created_at: now},
+        %ItemAdded{
+          item_id: "espresso-blend-2000",
+          product_id: "espresso-blend",
+          name: "Espresso Blend",
+          price: 12.99,
+          added_at: now
+        }
+      ]
+
+      # This should not raise FunctionClauseError
+      final_state = Enum.reduce(events, initial_state, &CartSession.evolve(&2, &1))
+
+      assert final_state.session_id == "session-123"
+      assert length(final_state.items) == 1
+      assert hd(final_state.items).product_id == "espresso-blend"
     end
   end
 

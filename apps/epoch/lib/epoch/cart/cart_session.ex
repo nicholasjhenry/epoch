@@ -6,7 +6,14 @@ defmodule Epoch.Cart.CartSession do
   Stream name format: "cart-{session_id}"
   """
 
-  alias Epoch.Cart.Events.{CartCleared, CartCreated, ItemAdded, ItemArchived, ItemRemoved}
+  alias Epoch.Cart.Events.{
+    CartCleared,
+    CartCreated,
+    CartSubmitted,
+    ItemAdded,
+    ItemArchived,
+    ItemRemoved
+  }
 
   @type cart_item :: %{
           product_id: String.t(),
@@ -26,7 +33,12 @@ defmodule Epoch.Cart.CartSession do
   """
   @spec evolve(
           t(),
-          CartCreated.t() | ItemAdded.t() | ItemRemoved.t() | ItemArchived.t() | CartCleared.t()
+          CartCreated.t()
+          | ItemAdded.t()
+          | ItemRemoved.t()
+          | ItemArchived.t()
+          | CartCleared.t()
+          | CartSubmitted.t()
         ) :: t()
   def evolve(state, %CartCreated{session_id: id, created_at: at}) do
     %{state | session_id: id, created_at: at}
@@ -47,6 +59,11 @@ defmodule Epoch.Cart.CartSession do
   end
 
   def evolve(_state, %CartCleared{}) do
+    %__MODULE__{}
+  end
+
+  def evolve(_state, %CartSubmitted{}) do
+    # Submitting a cart clears it, allowing a fresh cart to be started
     %__MODULE__{}
   end
 

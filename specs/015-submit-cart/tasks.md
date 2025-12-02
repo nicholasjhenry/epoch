@@ -25,9 +25,9 @@
 
 **Purpose**: Create feature directory structure and shared event types
 
-- [ ] T001 Create CartSubmitted event struct in `apps/epoch/lib/epoch/cart/events/cart_submitted.ex` | Skills: elixir-core
-- [ ] T002 [P] Create SubmitCart command struct in `apps/epoch_web/lib/epoch_web/slices/submit_cart/command.ex` | Skills: elixir-core
-- [ ] T003 [P] Create InventoriesView read model in `apps/epoch_web/lib/epoch_web/slices/submit_cart/inventories_view.ex` | Skills: elixir-core
+- [X] T001 Create CartSubmitted event struct in `apps/epoch/lib/epoch/cart/events/cart_submitted.ex` | Skills: elixir-core
+- [X] T002 [P] Create SubmitCart command struct in `apps/epoch_web/lib/epoch_web/slices/submit_cart/command.ex` | Skills: elixir-core
+- [X] T003 [P] Create InventoriesView read model in `apps/epoch_web/lib/epoch_web/slices/submit_cart/inventories_view.ex` | Skills: elixir-core
 
 ---
 
@@ -37,8 +37,8 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T004 Create CommandHandler scaffold with handle/1 function signature in `apps/epoch_web/lib/epoch_web/slices/submit_cart/command_handler.ex` | Skills: elixir-core
-- [ ] T005 Create unit test file with empty test module in `apps/epoch/test/epoch/slices/submit_cart/command_handler_test.exs` | Skills: elixir-testing
+- [X] T004 Create CommandHandler scaffold with handle/1 function signature in `apps/epoch_web/lib/epoch_web/slices/submit_cart/command_handler.ex` | Skills: elixir-core
+- [X] T005 Create unit test file with empty test module in `apps/epoch/test/epoch/slices/submit_cart/command_handler_test.exs` | Skills: elixir-testing
 
 **Checkpoint**: Foundation ready - user story implementation can now begin
 
@@ -54,13 +54,13 @@
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T006 [US1] Unit test: Submit cart with single item and sufficient inventory returns CartSubmitted event in `apps/epoch/test/epoch/slices/submit_cart/command_handler_test.exs` | Skills: elixir-testing
-- [ ] T007 [P] [US1] Unit test: Submit cart with multiple items and sufficient inventory returns CartSubmitted event in `apps/epoch/test/epoch/slices/submit_cart/command_handler_test.exs` | Skills: elixir-testing
+- [X] T006 [US1] Unit test: Submit cart with single item and sufficient inventory returns CartSubmitted event in `apps/epoch/test/epoch/slices/submit_cart/command_handler_test.exs` | Skills: elixir-testing
+- [X] T007 [P] [US1] Unit test: Submit cart with multiple items and sufficient inventory returns CartSubmitted event in `apps/epoch/test/epoch/slices/submit_cart/command_handler_test.exs` | Skills: elixir-testing
 
 ### Implementation for User Story 1
 
-- [ ] T008 [US1] Implement CommandHandler.handle/1 happy path: read cart items, build inventory map via InventoriesView, validate inventory > 0, append CartSubmitted event in `apps/epoch_web/lib/epoch_web/slices/submit_cart/command_handler.ex` | Skills: elixir-core
-- [ ] T009 [US1] Verify tests T006-T007 pass and CartSubmitted event is appended to cart stream | Skills: elixir-testing
+- [X] T008 [US1] Implement CommandHandler.handle/1 happy path: read cart items, build inventory map via InventoriesView, validate inventory > 0, append CartSubmitted event in `apps/epoch_web/lib/epoch_web/slices/submit_cart/command_handler.ex` | Skills: elixir-core
+- [X] T009 [US1] Verify tests T006-T007 pass and CartSubmitted event is appended to cart stream | Skills: elixir-testing
 
 **Checkpoint**: User Story 1 is complete - cart submission with available inventory works
 
@@ -74,14 +74,14 @@
 
 ### Tests for User Story 2 (MANDATORY - write these first) ⚠️
 
-- [ ] T010 [US2] Unit test: Submit cart when product inventory is 0 returns {:error, {:insufficient_inventory, [product_id]}} in `apps/epoch/test/epoch/slices/submit_cart/command_handler_test.exs` | Skills: elixir-testing
-- [ ] T011 [P] [US2] Unit test: Submit cart when product has no inventory record returns {:error, {:insufficient_inventory, [product_id]}} in `apps/epoch/test/epoch/slices/submit_cart/command_handler_test.exs` | Skills: elixir-testing
-- [ ] T012 [P] [US2] Unit test: Submit cart with multiple items where one has 0 inventory returns error listing out-of-stock product in `apps/epoch/test/epoch/slices/submit_cart/command_handler_test.exs` | Skills: elixir-testing
+- [X] T010 [US2] Unit test: Submit cart when product inventory is 0 returns {:error, {:insufficient_inventory, [product_id]}} in `apps/epoch/test/epoch/slices/submit_cart/command_handler_test.exs` | Skills: elixir-testing
+- [X] T011 [P] [US2] Unit test: Submit cart when product has no inventory record returns {:error, {:insufficient_inventory, [product_id]}} in `apps/epoch/test/epoch/slices/submit_cart/command_handler_test.exs` | Skills: elixir-testing
+- [X] T012 [P] [US2] Unit test: Submit cart with multiple items where one has 0 inventory returns error listing out-of-stock product in `apps/epoch/test/epoch/slices/submit_cart/command_handler_test.exs` | Skills: elixir-testing
 
 ### Implementation for User Story 2
 
-- [ ] T013 [US2] Implement inventory validation in CommandHandler: check each product_id has quantity > 0, return {:error, {:insufficient_inventory, product_ids}} on failure in `apps/epoch_web/lib/epoch_web/slices/submit_cart/command_handler.ex` | Skills: elixir-core
-- [ ] T014 [US2] Verify tests T010-T012 pass | Skills: elixir-testing
+- [X] T013 [US2] Implement inventory validation in CommandHandler: check each product_id has quantity > 0, return {:error, {:insufficient_inventory, product_ids}} on failure in `apps/epoch_web/lib/epoch_web/slices/submit_cart/command_handler.ex` | Skills: elixir-core
+- [X] T014 [US2] Verify tests T010-T012 pass | Skills: elixir-testing
 
 **Checkpoint**: User Story 2 is complete - out-of-stock products are rejected with details
 
@@ -95,13 +95,13 @@
 
 ### Tests for User Story 3 (MANDATORY - write these first) ⚠️
 
-- [ ] T015 [US3] Unit test: Submit cart with no items returns {:error, :cart_empty} in `apps/epoch/test/epoch/slices/submit_cart/command_handler_test.exs` | Skills: elixir-testing
-- [ ] T016 [P] [US3] Unit test: Submit cart after CartCleared event returns {:error, :cart_empty} in `apps/epoch/test/epoch/slices/submit_cart/command_handler_test.exs` | Skills: elixir-testing
+- [X] T015 [US3] Unit test: Submit cart with no items returns {:error, :cart_empty} in `apps/epoch/test/epoch/slices/submit_cart/command_handler_test.exs` | Skills: elixir-testing
+- [X] T016 [P] [US3] Unit test: Submit cart after CartCleared event returns {:error, :cart_empty} in `apps/epoch/test/epoch/slices/submit_cart/command_handler_test.exs` | Skills: elixir-testing
 
 ### Implementation for User Story 3
 
-- [ ] T017 [US3] Implement empty cart validation in CommandHandler: check cart.items is not empty, return {:error, :cart_empty} if empty in `apps/epoch_web/lib/epoch_web/slices/submit_cart/command_handler.ex` | Skills: elixir-core
-- [ ] T018 [US3] Verify tests T015-T016 pass | Skills: elixir-testing
+- [X] T017 [US3] Implement empty cart validation in CommandHandler: check cart.items is not empty, return {:error, :cart_empty} if empty in `apps/epoch_web/lib/epoch_web/slices/submit_cart/command_handler.ex` | Skills: elixir-core
+- [X] T018 [US3] Verify tests T015-T016 pass | Skills: elixir-testing
 
 **Checkpoint**: User Story 3 is complete - empty cart submissions are rejected
 
@@ -115,13 +115,13 @@
 
 ### Tests for User Story 4 (MANDATORY - write these first) ⚠️
 
-- [ ] T019 [US4] Unit test: Submit cart correctly excludes removed items from validation in `apps/epoch/test/epoch/slices/submit_cart/command_handler_test.exs` | Skills: elixir-testing
-- [ ] T020 [P] [US4] Unit test: Submit cart correctly excludes archived items from validation in `apps/epoch/test/epoch/slices/submit_cart/command_handler_test.exs` | Skills: elixir-testing
+- [X] T019 [US4] Unit test: Submit cart correctly excludes removed items from validation in `apps/epoch/test/epoch/slices/submit_cart/command_handler_test.exs` | Skills: elixir-testing
+- [X] T020 [P] [US4] Unit test: Submit cart correctly excludes archived items from validation in `apps/epoch/test/epoch/slices/submit_cart/command_handler_test.exs` | Skills: elixir-testing
 
 ### Implementation for User Story 4
 
-- [ ] T021 [US4] Verify existing CartItemsView correctly filters removed/archived items (no new code needed, tests should pass) | Skills: elixir-testing
-- [ ] T022 [US4] Verify tests T019-T020 pass | Skills: elixir-testing
+- [X] T021 [US4] Verify existing CartItemsView correctly filters removed/archived items (no new code needed, tests should pass) | Skills: elixir-testing
+- [X] T022 [US4] Verify tests T019-T020 pass | Skills: elixir-testing
 
 **Checkpoint**: User Story 4 is complete - removed/archived items are correctly handled
 
@@ -133,15 +133,15 @@
 
 ### Tests for UI Integration (MANDATORY - write these first) ⚠️
 
-- [ ] T023 Integration test: End-to-end cart submission success flow in `apps/epoch_web/test/epoch_web/slices/submit_cart_test.exs` | Skills: elixir-testing, phoenix-liveview
-- [ ] T024 [P] Integration test: End-to-end cart submission failure shows error flash in `apps/epoch_web/test/epoch_web/slices/submit_cart_test.exs` | Skills: elixir-testing, phoenix-liveview
+- [X] T023 Integration test: End-to-end cart submission success flow in `apps/epoch_web/test/epoch_web/slices/submit_cart_test.exs` | Skills: elixir-testing, phoenix-liveview
+- [X] T024 [P] Integration test: End-to-end cart submission failure shows error flash in `apps/epoch_web/test/epoch_web/slices/submit_cart_test.exs` | Skills: elixir-testing, phoenix-liveview
 
 ### Implementation for UI Integration
 
-- [ ] T025 Create SubmitCart LiveComponent with submit button in `apps/epoch_web/lib/epoch_web/slices/submit_cart/component.ex` | Skills: phoenix-liveview, phoenix-html
-- [ ] T026 Add SubmitCart component to CartItems LiveView in `apps/epoch_web/lib/epoch_web/slices/cart_items/live.ex` | Skills: phoenix-liveview
-- [ ] T027 Handle flash messages from SubmitCart component in CartItems LiveView | Skills: phoenix-liveview
-- [ ] T028 Verify tests T023-T024 pass | Skills: elixir-testing
+- [X] T025 Create SubmitCart LiveComponent with submit button in `apps/epoch_web/lib/epoch_web/slices/submit_cart/component.ex` | Skills: phoenix-liveview, phoenix-html
+- [X] T026 Add SubmitCart component to CartItems LiveView in `apps/epoch_web/lib/epoch_web/slices/cart_items/live.ex` | Skills: phoenix-liveview
+- [X] T027 Handle flash messages from SubmitCart component in CartItems LiveView | Skills: phoenix-liveview
+- [X] T028 Verify tests T023-T024 pass | Skills: elixir-testing
 
 **Checkpoint**: UI integration complete - Submit Cart button works in browser
 
@@ -151,9 +151,9 @@
 
 **Purpose**: Final validation and cleanup
 
-- [ ] T029 Run `mix precommit` to verify all tests pass and code quality checks | Skills: elixir-testing
-- [ ] T030 Run quickstart.md manual validation scenarios | Skills: phoenix-liveview
-- [ ] T031 Verify PubSub broadcasts CartSubmitted event for real-time UI updates | Skills: elixir-otp
+- [X] T029 Run `mix precommit` to verify all tests pass and code quality checks | Skills: elixir-testing
+- [X] T030 Run quickstart.md manual validation scenarios | Skills: phoenix-liveview
+- [X] T031 Verify PubSub broadcasts CartSubmitted event for real-time UI updates | Skills: elixir-otp
 
 ---
 
